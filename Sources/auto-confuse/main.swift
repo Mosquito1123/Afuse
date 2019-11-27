@@ -15,7 +15,7 @@ let verbosity = CounterOption(shortFlag: "v", longFlag: "verbose",
 let filePathx = StringOption(shortFlag: "i", longFlag: "input", required: true,
   helpMessage: "Path to the input file.")
 let spamCodeOutPathx = StringOption(shortFlag: "s", longFlag: "spamCodeOut",
-  helpMessage: "Generate spam code output path.")
+  helpMessage: "Generate spam code output path.For example:path,paramName,oldFunc,newClass")
 let handleXcassetsx = BoolOption(shortFlag: "x", longFlag: "handleXcassets",
 helpMessage: "Handle xcassets confuse.")
 let deleteCommentsx = BoolOption(shortFlag: "d", longFlag: "deleteComments",
@@ -23,7 +23,7 @@ helpMessage: "Delete comments.")
 let modifyProjectNamex = StringOption(shortFlag: "m", longFlag: "modifyProjectName",
 helpMessage: "Modify ProjectName.Format:OldName>NewName.For example:DDApp>CCApp.")
 let modifyClassNamePrefixx = StringOption(shortFlag: "p", longFlag: "modifyClassNamePrefix",
-helpMessage: "Modify ClassNamePrefix.Format:OldClassNamePrefix>NewClassNamePrefix.For example:DDApp>CCApp.")
+helpMessage: "Modify Project ClassNamePrefix.Format:Project OldClassNamePrefix>NewClassNamePrefix.For example:DDAppPath DDApp>CCApp.")
 let ignoreDirNamesx = StringOption(shortFlag: "g", longFlag: "ignoreDirNames",
 helpMessage: "Ignore dirNames.Format:A,B,C....For example:DDApp,CCApp,BBApp....")
 cli.addOptions(filePathx,spamCodeOutPathx,handleXcassetsx,deleteCommentsx,modifyProjectNamex,modifyClassNamePrefixx,ignoreDirNamesx)
