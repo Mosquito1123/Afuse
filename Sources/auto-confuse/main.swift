@@ -1,4 +1,4 @@
-
+import Foundation
 import CommandLineKit
 
 let cli = CommandLineKit.CommandLine()
@@ -26,6 +26,8 @@ let modifyClassNamePrefixx = StringOption(shortFlag: "p", longFlag: "modifyClass
 helpMessage: "Modify Project ClassNamePrefix.Format:Project OldClassNamePrefix>NewClassNamePrefix.For example:DDAppPath DDApp>CCApp.")
 let ignoreDirNamesx = StringOption(shortFlag: "g", longFlag: "ignoreDirNames",
 helpMessage: "Ignore dirNames.Format:A,B,C....For example:DDApp,CCApp,BBApp....")
+
+
 cli.addOptions(filePathx,spamCodeOutPathx,handleXcassetsx,deleteCommentsx,modifyProjectNamex,modifyClassNamePrefixx,ignoreDirNamesx)
 do {
   try cli.parse()
@@ -33,15 +35,12 @@ do {
   cli.printUsage(error)
 }
 
-print("File path is \(filePathx.value ?? "")")
-//print("Compress is \(compress.value)")
-print("Verbosity is \(verbosity.value)")
 
-//void recursiveDirectory(NSString *directory, NSArray<NSString *> *ignoreDirNames, void(^handleMFile)(NSString *mFilePath), void(^handleSwiftFile)(NSString *swiftFilePath));
-//void generateSpamCodeFile(NSString *outDirectory, NSString *mFilePath, GSCSourceType type, NSMutableString *categoryCallImportString, NSMutableString *categoryCallFuncString, NSMutableString *newClassCallImportString, NSMutableString *newClassCallFuncString);
-//void generateSwiftSpamCodeFile(NSString *outDirectory, NSString *swiftFilePath);
-//NSString *randomString(NSInteger length);
-//void handleXcassetsFiles(NSString *directory);
-//void deleteComments(NSString *directory, NSArray<NSString *> *ignoreDirNames);
-//void modifyProjectName(NSString *projectDir, NSString *oldName, NSString *newName);
-//void modifyClassNamePrefix(NSMutableString *projectContent, NSString *sourceCodeDir, NSArray<NSString *> *ignoreDirNames, NSString *oldName, NSString *newName);
+print("File Path is \(filePathx.value ?? "")")
+
+let input = Recursiver().validInput(filePathx.value)
+Recursiver().swift_recursiveDirectory(directory: input ?? "", ignoreDirNames: [], handleMFile: { (mFilePath) in
+    print(mFilePath ?? "")
+}) { (swiftFilePath) in
+    print(swiftFilePath ?? "")
+}
