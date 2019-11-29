@@ -8,7 +8,8 @@
 import Foundation
 import objc
 public class Handler{
-    public func swift_handleXcassetsFiles(assetsDirectory path:String){
+    public func swift_handleXcassetsFiles(assetsDirectory path:String?){
+        
         handleXcassetsFiles(path)
     }
 }

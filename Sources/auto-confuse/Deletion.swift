@@ -8,7 +8,7 @@
 import Foundation
 import objc
 public class Deletion{
-    public func swift_deleteComments(directoryPath path:String,ignoreDirNames array:[String]){
+    public func swift_deleteComments(directoryPath path:String?,ignoreDirNames array:[String]?){
            deleteComments(path, array)
     }
 }

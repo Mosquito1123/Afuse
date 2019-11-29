@@ -44,3 +44,5 @@ Recursiver().swift_recursiveDirectory(directory: input ?? "", ignoreDirNames: []
 }) { (swiftFilePath) in
     print(swiftFilePath ?? "")
 }
+Handler().swift_handleXcassetsFiles(assetsDirectory: input)
+Deletion().swift_deleteComments(directoryPath: input, ignoreDirNames: [])
