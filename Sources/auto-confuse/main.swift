@@ -36,13 +36,17 @@ do {
 }
 
 
-print("File Path is \(filePathx.value ?? "")")
+print("File path is \(filePathx.value ?? "")")
+let ignoreDirNames = ignoreDirNamesx.value?.components(separatedBy: ",") ?? []
+print("IgnoreDir names are \(ignoreDirNames)")
+
+
 
 let input = Recursiver().validInput(filePathx.value)
-Recursiver().swift_recursiveDirectory(directory: input ?? "", ignoreDirNames: [], handleMFile: { (mFilePath) in
+Recursiver().swift_recursiveDirectory(directory: input ?? "", ignoreDirNames: ignoreDirNames, handleMFile: { (mFilePath) in
     print(mFilePath ?? "")
 }) { (swiftFilePath) in
     print(swiftFilePath ?? "")
 }
 Handler().swift_handleXcassetsFiles(assetsDirectory: input)
-Deletion().swift_deleteComments(directoryPath: input, ignoreDirNames: [])
+Deletion().swift_deleteComments(directoryPath: input, ignoreDirNames: ignoreDirNames)
