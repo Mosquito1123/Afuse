@@ -6,9 +6,9 @@
 //
 
 import Foundation
-import objc
+import objc_confuse
 public class Deletion{
-    public func swift_deleteComments(directoryPath path:String?,ignoreDirNames array:[String]?){
+    public class func swift_deleteComments(directoryPath path:String?,ignoreDirNames array:[String]?){
            deleteComments(path, array)
     }
 }

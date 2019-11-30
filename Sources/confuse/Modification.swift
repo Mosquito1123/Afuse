@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import objc
+import objc_confuse
 public class Modification{
       public func swift_modifyProjectName(projectDir path:String,name old:String,name new:String){
         modifyProjectName(path, old, new)

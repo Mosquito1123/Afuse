@@ -6,19 +6,19 @@
 //
 
 import Foundation
-import objc
+import objc_confuse
 public class Recursiver{
-    public func recursive(directory input:String?,ignoreDirNames names:[String]?,handleMFile handler:@escaping ((_ mFilePath:String?)->Void),handleSwiftFile swiftHandler:@escaping ((_ swiftFilePath:String?)->Void)){
-        guard let validInput = self.validInput(input) else{
+    public class func recursive(directory input:String?,ignoreDirNames names:[String]?,handleMFile handler:@escaping ((_ mFilePath:String?)->Void),handleSwiftFile swiftHandler:@escaping ((_ swiftFilePath:String?)->Void)){
+        guard let validInput = Recursiver.validInput(input) else{
             return
         }
         guard let dirNames = names else{
             return
         }
-        self.swift_recursiveDirectory(directory: validInput, ignoreDirNames: dirNames, handleMFile: handler, handleSwiftFile: swiftHandler)
+        Recursiver.swift_recursiveDirectory(directory: validInput, ignoreDirNames: dirNames, handleMFile: handler, handleSwiftFile: swiftHandler)
     }
     
-    public func validInput(_ input:String?)->String?{
+    public class func validInput(_ input:String?)->String?{
     
         guard let xInput = input else {
             print("Missing required options: [\"-i, --input\"]")
@@ -39,7 +39,7 @@ public class Recursiver{
             return nil
         }
     }
-    public func swift_recursiveDirectory(directory path:String,ignoreDirNames names:[String],handleMFile handler:@escaping ((_ mFilePath:String?)->Void),handleSwiftFile swiftHandler:@escaping ((_ swiftFilePath:String?)->Void))  {
+    public class func swift_recursiveDirectory(directory path:String,ignoreDirNames names:[String],handleMFile handler:@escaping ((_ mFilePath:String?)->Void),handleSwiftFile swiftHandler:@escaping ((_ swiftFilePath:String?)->Void))  {
         
         recursiveDirectory(path, names, handler, swiftHandler)
        

@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "auto-confuse"
-               BuildableName = "auto-confuse"
-               BlueprintName = "auto-confuse"
+               BlueprintIdentifier = "auto-confuse-executable"
+               BuildableName = "auto-confuse-executable"
+               BlueprintName = "auto-confuse-executable"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -31,20 +31,6 @@
                BlueprintIdentifier = "auto-confuseTests"
                BuildableName = "auto-confuseTests"
                BlueprintName = "auto-confuseTests"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "objc"
-               BuildableName = "objc"
-               BlueprintName = "objc"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -82,22 +68,12 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "auto-confuse"
-            BuildableName = "auto-confuse"
-            BlueprintName = "auto-confuse"
+            BlueprintIdentifier = "auto-confuse-executable"
+            BuildableName = "auto-confuse-executable"
+            BlueprintName = "auto-confuse-executable"
             ReferencedContainer = "container:">
          </BuildableReference>
       </BuildableProductRunnable>
-      <CommandLineArguments>
-         <CommandLineArgument
-            argument = "-i /Users/elen/Downloads/Demo/"
-            isEnabled = "YES">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "-g Pods"
-            isEnabled = "YES">
-         </CommandLineArgument>
-      </CommandLineArguments>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -109,9 +85,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "auto-confuse"
-            BuildableName = "auto-confuse"
-            BlueprintName = "auto-confuse"
+            BlueprintIdentifier = "auto-confuse-executable"
+            BuildableName = "auto-confuse-executable"
+            BlueprintName = "auto-confuse-executable"
             ReferencedContainer = "container:">
          </BuildableReference>
       </BuildableProductRunnable>

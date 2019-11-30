@@ -1,5 +1,6 @@
 import Foundation
 import CommandLineKit
+import confuse
 
 let cli = CommandLineKit.CommandLine()
 
@@ -42,11 +43,11 @@ print("IgnoreDir names are \(ignoreDirNames)")
 
 
 
-let input = Recursiver().validInput(filePathx.value)
-Recursiver().swift_recursiveDirectory(directory: input ?? "", ignoreDirNames: ignoreDirNames, handleMFile: { (mFilePath) in
+let input = Recursiver.validInput(filePathx.value)
+Recursiver.swift_recursiveDirectory(directory: input ?? "", ignoreDirNames: ignoreDirNames, handleMFile: { (mFilePath) in
     print(mFilePath ?? "")
 }) { (swiftFilePath) in
     print(swiftFilePath ?? "")
 }
-Handler().swift_handleXcassetsFiles(assetsDirectory: input)
-Deletion().swift_deleteComments(directoryPath: input, ignoreDirNames: ignoreDirNames)
+Handler.swift_handleXcassetsFiles(assetsDirectory: input)
+Deletion.swift_deleteComments(directoryPath: input, ignoreDirNames: ignoreDirNames)

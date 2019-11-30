@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import objc
+import objc_confuse
 public class Generator{
     public func swift_generateSpamCodeFile(outDirectory out:String,mFilePath mfile:String,sourceType type:GSCSourceType,categoryCallImportString categoryCallImport:NSMutableString,categoryCallFuncString categoryCallFunc:NSMutableString,newClassCallImportString newClassCallImport:NSMutableString,newClassCallFuncString newClassCallFunc:NSMutableString){
     

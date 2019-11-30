@@ -6,9 +6,9 @@
 //
 
 import Foundation
-import objc
+import objc_confuse
 public class Handler{
-    public func swift_handleXcassetsFiles(assetsDirectory path:String?){
+    public class func swift_handleXcassetsFiles(assetsDirectory path:String?){
         
         handleXcassetsFiles(path)
     }
