@@ -6,6 +6,11 @@
 //
 
 #import "Functions.h"
+#if TARGET_OS_OSX
+#import <Cocoa/Cocoa.h>
+#else
+#import <UIKit/UIKit.h>
+#endif
 #pragma mark - 公共方法
 
 static const NSString *kRandomAlphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -81,8 +86,35 @@ void renameFile(NSString *oldPath, NSString *newPath) {
         abort();
     }
 }
-
-
+//混淆图片
+void confuseImageFile(NSString *oldPath){
+    NSData *imageData = [[NSData alloc]initWithContentsOfFile:oldPath];
+    double subtraction = 0.1;
+    //取绝对值
+    subtraction = ABS(subtraction);
+    //乘以精度的位数
+    subtraction *= 100;
+    //在差值间随机
+    double randomNumber = arc4random() % ((int) subtraction + 1);
+    //随机的结果除以精度的位数
+    randomNumber /= 100;
+    //将随机的值加到较小的值上
+    double result = 0.9 + randomNumber;
+    #if TARGET_OS_OSX
+    //mac os
+    NSBitmapImageRep *imageRep = [NSBitmapImageRep imageRepWithData:imageData];
+        NSDictionary *imageProps = [NSDictionary dictionaryWithObject:[NSNumber numberWithDouble:result] forKey:NSImageGamma];
+    NSData *imgDt = [imageRep representationUsingType:NSPNGFileType properties:imageProps];
+    [imgDt writeToFile:oldPath atomically:YES];
+    
+    #else
+    //ios
+    UIImage *img=[[UIImage alloc]initWithContentsOfFile:oldPath];
+    NSData *data = UIImageJPEGRepresentation(img, result);
+    [data writeToFile:oldPath atomically:YES];
+    #endif
+    
+}
 
 #pragma mark - 生成垃圾代码
 
@@ -417,7 +449,7 @@ void handleXcassetsFiles(NSString *directory) {
                     newImageFileName = [randomString(10) stringByAppendingPathExtension:imageFileName.pathExtension];
                     newImageFilePath = [filePath.stringByDeletingLastPathComponent stringByAppendingPathComponent:newImageFileName];
                 }
-                
+                confuseImageFile(imageFilePath);
                 renameFile(imageFilePath, newImageFilePath);
                 
                 fileContent = [fileContent stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"\"%@\"", imageFileName]
