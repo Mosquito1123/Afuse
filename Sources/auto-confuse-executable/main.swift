@@ -1,7 +1,10 @@
 import Foundation
 import CommandLineKit
+import SwiftShell
 import confuse
 
+
+//命令行
 let cli = CommandLineKit.CommandLine()
 
 let help = BoolOption(shortFlag: "h", longFlag: "help",
@@ -36,18 +39,6 @@ do {
   cli.printUsage(error)
 }
 
-
-print("File path is \(filePathx.value ?? "")")
-let ignoreDirNames = ignoreDirNamesx.value?.components(separatedBy: ",") ?? []
-print("IgnoreDir names are \(ignoreDirNames)")
+AutoConfuse.auto_confuse(inputDir: filePathx.value, needHandlerAssets: handleXcassetsx.value, needDeleteComments: deleteCommentsx.value, modifyProjectName: modifyProjectNamex.value, modifyClassNamePrefix: modifyClassNamePrefixx.value, ignoreDirNames: ignoreDirNamesx.value)
 
 
-
-let input = Recursiver.validInput(filePathx.value)
-Recursiver.swift_recursiveDirectory(directory: input ?? "", ignoreDirNames: ignoreDirNames, handleMFile: { (mFilePath) in
-    print(mFilePath ?? "")
-}) { (swiftFilePath) in
-    print(swiftFilePath ?? "")
-}
-Handler.swift_handleXcassetsFiles(assetsDirectory: input)
-Deletion.swift_deleteComments(directoryPath: input, ignoreDirNames: ignoreDirNames)

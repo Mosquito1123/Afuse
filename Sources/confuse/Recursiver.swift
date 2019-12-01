@@ -7,7 +7,10 @@
 
 import Foundation
 import objc_confuse
+
+
 public class Recursiver{
+    //遍历文件夹
     public class func recursive(directory input:String?,ignoreDirNames names:[String]?,handleMFile handler:@escaping ((_ mFilePath:String?)->Void),handleSwiftFile swiftHandler:@escaping ((_ swiftFilePath:String?)->Void)){
         guard let validInput = Recursiver.validInput(input) else{
             return
@@ -18,6 +21,7 @@ public class Recursiver{
         Recursiver.swift_recursiveDirectory(directory: validInput, ignoreDirNames: dirNames, handleMFile: handler, handleSwiftFile: swiftHandler)
     }
     
+    //校验输入路径
     public class func validInput(_ input:String?)->String?{
     
         guard let xInput = input else {

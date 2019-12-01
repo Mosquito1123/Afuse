@@ -80,7 +80,11 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "-g Pods"
+            argument = "-m NewDemo&gt;NewIDemo"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-g Libs"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

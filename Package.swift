@@ -15,6 +15,7 @@ let package = Package(
         // Dependencies declare other packages that this package depends on.
         .package(url: "https://github.com/IngmarStein/CommandLineKit.git", from: "2.3.0"),
         .package(url: "https://github.com/onevcat/Rainbow", from: "3.0.0"),
+        .package(url: "https://github.com/kareman/SwiftShell", from: "5.0.0")
 
     ],
     targets: [
@@ -26,7 +27,7 @@ let package = Package(
             dependencies: ["objc_confuse"]),
         .target(
             name: "auto-confuse-executable",
-            dependencies: ["CommandLineKit","Rainbow","confuse"]),
+            dependencies: ["CommandLineKit","Rainbow","confuse","SwiftShell"]),
         .testTarget(
             name: "auto-confuseTests",
             dependencies: ["confuse"]),
