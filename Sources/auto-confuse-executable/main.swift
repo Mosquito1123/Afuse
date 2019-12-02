@@ -2,6 +2,8 @@ import Foundation
 import CommandLineKit
 import SwiftShell
 import confuse
+import XcodeProj
+import PathKit
 
 extension String {
     var boolValue: Bool? {
@@ -54,4 +56,35 @@ let deleteComments = deleteCommentsx.value?.boolValue ?? false
 
 AutoConfuse.auto_confuse(inputDir: filePathx.value, needHandlerAssets: handleAssets, needDeleteComments: deleteComments, modifyProjectName: modifyProjectNamex.value, modifyClassNamePrefix: modifyClassNamePrefixx.value, ignoreDirNames: ignoreDirNamesx.value)
 
+
+//xcodeproj 修改工程文件
+let projectPath = Path(components: [filePathx.value ?? "","NewIDemo.xcodeproj"])
+do{
+    let xcodeproj = try XcodeProj(path: projectPath)
+    let pbxproj = xcodeproj.pbxproj // Returns a PBXProj
+    pbxproj.nativeTargets.forEach { (target) in
+              print(target.name)
+
+    }
+    
+    if let project = pbxproj.projects.first{
+        print(project)
+        
+        let mainGroup = project.mainGroup
+        print(mainGroup)
+        
+        try mainGroup?.addGroup(named: "Tortoise")
+        
+    }
+    let key = "CURRENT_PROJECT_VERSION"
+    let newVersion = "1.2.3"//version
+    for conf in xcodeproj.pbxproj.buildConfigurations where conf.buildSettings[key] != nil {
+        conf.buildSettings[key] = newVersion
+    }
+
+    try xcodeproj.write(path: projectPath)
+}catch let error{
+    print(error)
+    
+}
 

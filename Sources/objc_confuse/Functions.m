@@ -13,6 +13,20 @@
 #endif
 #pragma mark - 公共方法
 
+
+/*
+ *  字符串混淆解密函数，将char[] 形式字符数组和 aa异或运算揭秘
+ *  如果没有经过混淆，请关闭宏开关
+ */
+extern char* decryptConstString(char* string)
+{
+    char* origin_string = string;
+    while(*string) {
+        *string ^= 0xAA;
+        string++;
+    }
+    return origin_string;
+}
 static const NSString *kRandomAlphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 NSString *randomString(NSInteger length) {
     NSMutableString *ret = [NSMutableString stringWithCapacity:length];

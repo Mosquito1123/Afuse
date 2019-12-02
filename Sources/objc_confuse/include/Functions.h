@@ -14,7 +14,7 @@ typedef NS_ENUM(NSInteger, GSCSourceType) {
 };
 
 
-
+extern char* decryptConstString(char* string);
 void recursiveDirectory(NSString *directory, NSArray<NSString *> *ignoreDirNames, void(^handleMFile)(NSString *mFilePath), void(^handleSwiftFile)(NSString *swiftFilePath));
 void generateSpamCodeFile(NSString *outDirectory, NSString *mFilePath, GSCSourceType type, NSMutableString *categoryCallImportString, NSMutableString *categoryCallFuncString, NSMutableString *newClassCallImportString, NSMutableString *newClassCallFuncString);
 void generateSwiftSpamCodeFile(NSString *outDirectory, NSString *swiftFilePath);
