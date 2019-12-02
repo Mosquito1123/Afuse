@@ -7,6 +7,7 @@
 
 import Foundation
 public class AutoConfuse{
+    
     //自动混淆
     public class func auto_confuse(inputDir input:String?,needHandlerAssets handleAssets:Bool=true,needDeleteComments:Bool=true,modifyProjectName modifyProjectNameParams:String?,modifyClassNamePrefix modifyClassNamePrefixParams:String?,ignoreDirNames dirNamesString:String?){
         
@@ -15,7 +16,12 @@ public class AutoConfuse{
 
 
 
+        Preparation.shared.prepare_to_confuse(input)
+        Preparation.shared.prepare_to_decode_confuse(input)
+
+        Confusion.confuse()
         let input = Recursiver.validInput(input)
+        
         Recursiver.swift_recursiveDirectory(directory: input ?? "", ignoreDirNames: ignoreDirNames, handleMFile: { (mFilePath) in
             print(mFilePath ?? "")
         }) { (swiftFilePath) in

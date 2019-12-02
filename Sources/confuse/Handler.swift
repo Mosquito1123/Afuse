@@ -7,6 +7,7 @@
 
 import Foundation
 import objc_confuse
+
 public class Handler{
     //混淆素材
     public class func executeConfuseAssetsFiles(assetsDirectory path:String?){
