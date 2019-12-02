@@ -21,8 +21,14 @@ public class AutoConfuse{
         }) { (swiftFilePath) in
             print(swiftFilePath ?? "")
         }
-        Handler.executeConfuseAssetsFiles(assetsDirectory: input)
-        Deletion.executeDeleteComment(directoryPath: input, ignoreDirNames: ignoreDirNames)
+        if handleAssets == true{
+            Handler.executeConfuseAssetsFiles(assetsDirectory: input)
+
+        }
+        if needDeleteComments == true{
+            Deletion.executeDeleteComment(directoryPath: input, ignoreDirNames: ignoreDirNames)
+
+        }
         Modification.executeModifyProjectName(input,modifyProjectNameParams)
         Modification.executeModifyClassNamePrefix(input,ignoreDirNames,modifyClassNamePrefixParams)
     }
