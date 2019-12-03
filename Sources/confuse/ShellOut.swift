@@ -8,6 +8,37 @@
 import Foundation
 import Dispatch
 
+@discardableResult
+public func shell(_ launchPath: String, _ arguments: [String] = []) -> (String?, Int32) {
+  let task = Process()
+    if #available(OSX 10.13, *) {
+        task.executableURL = URL(fileURLWithPath: launchPath)
+    } else {
+        // Fallback on earlier versions
+    }
+  task.arguments = arguments
+
+  let pipe = Pipe()
+  task.standardOutput = pipe
+  task.standardError = pipe
+
+  do {
+    if #available(OSX 10.13, *) {
+        try task.run()
+    } else {
+        // Fallback on earlier versions
+    }
+  } catch {
+    // handle errors
+    print("Error: \(error.localizedDescription)")
+  }
+
+  let data = pipe.fileHandleForReading.readDataToEndOfFile()
+  let output = String(data: data, encoding: .utf8)
+
+  task.waitUntilExit()
+  return (output, task.terminationStatus)
+}
 // MARK: - API
 
 /**

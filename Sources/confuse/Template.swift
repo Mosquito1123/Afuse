@@ -9,6 +9,13 @@ import Foundation
 
 
 public struct Template{
+    public static let des_confuse_define = """
+    #import <Foundation/Foundation.h>
+    #import "DES3EncryptUtil.h"
+    #define des_decrypt(a)  [DES3EncryptUtil decrypt:[DES3EncryptUtil encrypt:a]];
+    #define des_decrypt(b)  [DES3EncryptUtil encrypt:[DES3EncryptUtil decrypt:b]];
+"""
+    
     public static func des_h()->String{
         return """
         #import <Foundation/Foundation.h>
