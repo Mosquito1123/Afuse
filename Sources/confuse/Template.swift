@@ -22,6 +22,7 @@ public struct Template{
     }
     public static func des_m(_ salt:String="123456",_ iv:String="01234567")->String{
         return """
+        #import "DES3EncryptUtil.h"
         #import <Foundation/Foundation.h>
         #import <CommonCrypto/CommonCryptor.h>
         #import "MyBase64.h"

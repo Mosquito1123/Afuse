@@ -57,7 +57,8 @@ let deleteComments = deleteCommentsx.value?.boolValue ?? false
 AutoConfuse.auto_confuse(inputDir: filePathx.value, needHandlerAssets: handleAssets, needDeleteComments: deleteComments, modifyProjectName: modifyProjectNamex.value, modifyClassNamePrefix: modifyClassNamePrefixx.value, ignoreDirNames: ignoreDirNamesx.value)
 
 
-//xcodeproj 修改工程文件
+/*
+xcodeproj 修改工程文件
 let projectPath = Path(components: [filePathx.value ?? "","NewIDemo.xcodeproj"])
 do{
     let xcodeproj = try XcodeProj(path: projectPath)
@@ -71,7 +72,7 @@ do{
         print(project)
         
         let mainGroup = project.mainGroup
-        print(mainGroup)
+        print(mainGroup?.name)
         
         try mainGroup?.addGroup(named: "Tortoise")
         
@@ -87,4 +88,4 @@ do{
     print(error)
     
 }
-
+*/
