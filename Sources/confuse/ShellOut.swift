@@ -7,7 +7,6 @@
 
 import Foundation
 import Dispatch
-import XcodeProj
 
 // MARK: - API
 

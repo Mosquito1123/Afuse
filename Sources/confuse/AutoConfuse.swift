@@ -18,7 +18,8 @@ public class AutoConfuse{
 
         Preparation.shared.prepare_to_confuse(input)
         Preparation.shared.prepare_to_decode_confuse(input)
-
+            
+        Preparation.shared.prepare_des_confuse_and_decode_confuse(input)
         Confusion.confuse()
         let input = Recursiver.validInput(input)
         

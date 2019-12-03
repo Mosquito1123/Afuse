@@ -31,10 +31,5 @@ NSString *gSourceCodeDir = nil;
 static NSString * const kNewClassDirName = @"NewClass";
 NS_ASSUME_NONNULL_BEGIN
 
-@interface Functions : NSObject
-
-
-
-@end
 
 NS_ASSUME_NONNULL_END

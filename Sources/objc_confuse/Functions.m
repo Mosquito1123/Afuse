@@ -13,7 +13,6 @@
 #endif
 #pragma mark - 公共方法
 
-
 /*
  *  字符串混淆解密函数，将char[] 形式字符数组和 aa异或运算揭秘
  *  如果没有经过混淆，请关闭宏开关
@@ -751,6 +750,7 @@ void modifyClassNamePrefix(NSMutableString *projectContent, NSString *sourceCode
         regularReplacement(projectContent, regularExpression, newClassName);
     }
 }
-@implementation Functions
 
-@end
+
+
+

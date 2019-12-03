@@ -38,4 +38,27 @@ public class Preparation{
         }
 
     }
+    
+    public func prepare_des_confuse_and_decode_confuse(_ dirPath:String?){
+        
+        guard let base64_h = dirPath?.stringByAppendingPathComponent(path: "MyBase64.h") else {return}
+        guard let base64_m = dirPath?.stringByAppendingPathComponent(path: "MyBase64.m") else {return}
+        guard let des_h = dirPath?.stringByAppendingPathComponent(path: "DES3EncryptUtil.h") else {return}
+        guard let des_m = dirPath?.stringByAppendingPathComponent(path: "DES3EncryptUtil.m") else {return}
+        let base64_h_url = URL(fileURLWithPath: base64_h)
+        let base64_m_url = URL(fileURLWithPath: base64_m)
+        let des_h_url = URL(fileURLWithPath: des_h)
+        let des_m_url = URL(fileURLWithPath: des_m)
+        do {
+            try Template.base64_h.data(using: String.Encoding.utf8)?.write(to: base64_h_url)
+            try Template.base64_m.data(using: String.Encoding.utf8)?.write(to: base64_m_url)
+            try Template.des_h().data(using: String.Encoding.utf8)?.write(to: des_h_url)
+            try Template.des_m().data(using: String.Encoding.utf8)?.write(to: des_m_url)
+
+        } catch let error {
+            print(error)
+        }
+
+        
+    }
 }

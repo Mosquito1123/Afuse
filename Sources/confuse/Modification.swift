@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import XcodeProj
 import objc_confuse
 
 
@@ -31,6 +30,7 @@ public class Modification{
         let old = paramsString?.components(separatedBy: ">").first
         let new = paramsString?.components(separatedBy: ">").last
         swift_modifyProjectName(projectDir: directory, name: old, name: new)
+        /*
         guard let projectPath = directory else {return}
         let path = projectPath.stringByAppendingPathComponent(path: "Podfile")
         if FileManager.default.fileExists(atPath: path) {
@@ -41,6 +41,7 @@ public class Modification{
                 print(error)
             }
         }
+ */
         
         
     }
