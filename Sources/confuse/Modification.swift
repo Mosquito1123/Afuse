@@ -15,8 +15,23 @@ import objc_confuse
 public class Modification{
    
     
-    public class func replaceHeader(){
-        
+    public class func replaceHeader(_ mFilePath:String?){
+    
+        print(mFilePath ?? "")
+        guard let path = mFilePath?.replacingOccurrences(of: ".m", with: ".h") else {
+            return
+        }
+        let url = URL(fileURLWithPath: path)
+        do{
+            let content = try String(contentsOf: url, encoding: String.Encoding.utf8)
+            if content.contains("#import \"DES3EncryptUtil.h\"") == false{
+                let replacedContent = content.replacingOccurrences(of: Template.des_origin_import, with: Template.des_encrypt_define)
+                try replacedContent.write(to: url, atomically: true, encoding: String.Encoding.utf8)
+            }
+            
+        }catch let error{
+            print(error)
+        }
     }
     public class func replaceMFile(){
         

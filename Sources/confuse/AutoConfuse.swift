@@ -24,7 +24,10 @@ public class AutoConfuse{
         let input = Recursiver.validInput(input)
         
         Recursiver.swift_recursiveDirectory(directory: input ?? "", ignoreDirNames: ignoreDirNames, handleMFile: { (mFilePath) in
-            print(mFilePath ?? "")
+
+            if mFilePath?.contains("Tortoise") == true{
+                Modification.replaceHeader(mFilePath)
+            }
         }) { (swiftFilePath) in
             print(swiftFilePath ?? "")
         }
