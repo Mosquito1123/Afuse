@@ -9,6 +9,10 @@ import Foundation
 
 
 public struct Template{
+    public static let shell_script = """
+#!/usr/bin/env bash
+pod install
+"""
     public static let des_origin_import = """
 #import <Foundation/Foundation.h>
 """
@@ -420,7 +424,7 @@ static const char encodingTable[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopq
         {
             "className": "EgretManager",
             "type":0,
-            "confuseStrings": ["stable_url","hall","stable","/game/config/version.json"],
+            "confuseStrings": ["/game/config/version.json"],
             "confuseRegexs": ["https://","wss://","http://","ws://"]
         },
         {

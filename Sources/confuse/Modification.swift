@@ -51,15 +51,29 @@ public class Modification{
             var replacedContent = content
             if let confuseStrings = classConfig.confuseStrings{
                 for confuseString in confuseStrings {
+                    
                     let objcOldString = "@\"\(confuseString)\""
                     if let encryptedString = DES3EncryptUtil.encrypt(confuseString){
                         let objcNewString = "des_decrypt(@\"\(encryptedString)\")"
                         replacedContent = replacedContent.replacingOccurrences(of: objcOldString, with: objcNewString, options: String.CompareOptions.regularExpression, range: nil)
                     }
                 }
-                try replacedContent.write(to: url, atomically: true, encoding: String.Encoding.utf8)
+                
                 
             }
+            if let _ = classConfig.confuseRegexs{
+                
+                let results = Modification.matches(for: "(https?|ftp|file|wss?)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]", in: replacedContent)
+                for result in results{
+                    let objcOldString = "@\"\(result)\""
+                    if let encryptedString = DES3EncryptUtil.encrypt(result){
+                        let objcNewString = "des_decrypt(@\"\(encryptedString)\")"
+                        replacedContent = replacedContent.replacingOccurrences(of: objcOldString, with: objcNewString, options: String.CompareOptions.regularExpression, range: nil)
+                    }
+                }
+                
+            }
+            try replacedContent.write(to: url, atomically: true, encoding: String.Encoding.utf8)
             
             
         }catch let error{
@@ -67,7 +81,22 @@ public class Modification{
         }
     }
    
-    
+    class func matches(for regex: String, in text: String) -> [String] {
+
+        do {
+            let regex = try NSRegularExpression(pattern: regex)
+            let results = regex.matches(in: text,
+                                        range: NSRange(text.startIndex..., in: text))
+            return results.map {
+                String(text[Range($0.range, in: text)!])
+            }
+            
+            
+        } catch let error {
+            print("invalid regex: \(error.localizedDescription)")
+            return []
+        }
+    }
     //修改工程名
     public class func executeModifyProjectName(_ directory:String?,_ paramsString:String?){
         let old = paramsString?.components(separatedBy: ">").first

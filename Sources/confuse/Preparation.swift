@@ -136,4 +136,15 @@ public class Preparation{
         
         
     }
+    public func prepare_shell_script(_ dirPath:String?){
+        guard let after_confuse_path = dirPath?.stringByAppendingPathComponent(path: Const.shell_script_file_name) else {return}
+        
+        let after_confuse_path_url = URL(fileURLWithPath: after_confuse_path)
+
+        do {
+            try Template.shell_script.data(using: String.Encoding.utf8)?.write(to: after_confuse_path_url)
+        } catch let error {
+            print(error)
+        }
+    }
 }
