@@ -12,6 +12,11 @@ public struct Config:Codable{
 }
 public struct ClassConfig:Codable{
     public var className:String?
+    public var type:ClassType?
     public var confuseStrings:[String]?
     public var confuseRegexs:[String]?
+}
+public enum ClassType:Int,Codable{
+    case objc
+    case swift
 }

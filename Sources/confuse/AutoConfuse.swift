@@ -21,12 +21,36 @@ public class AutoConfuse{
             
         Preparation.shared.prepare_des_confuse_and_decode_confuse(input)
         Confusion.confuse()
+        var config:Config?
+        do {
+            if let data = Template.tortoiseStructure.data(using: String.Encoding.utf8){
+                let result = try JSONDecoder().decode(Config.self, from: data)
+                print(result)
+                config = result
+            }
+        
+            
+        } catch let error {
+            print(error)
+        }
         let input = Recursiver.validInput(input)
         
         Recursiver.swift_recursiveDirectory(directory: input ?? "", ignoreDirNames: ignoreDirNames, handleMFile: { (mFilePath) in
 
             if mFilePath?.contains("Tortoise") == true{
-                Modification.replaceHeader(mFilePath)
+                config?.array?.forEach({ (conf) in
+                    if let className = conf.className{
+                        if mFilePath?.contains(className) == true{
+                            Modification.replaceMFile(mFilePath)
+                            Modification.matchStrings(mFilePath,conf)
+                        }
+                    }else{
+                        return
+                        
+                    }
+                })
+                
+                
             }
         }) { (swiftFilePath) in
             print(swiftFilePath ?? "")

@@ -17,27 +17,54 @@ public class Modification{
     
     public class func replaceHeader(_ mFilePath:String?){
     
+        //字符串硬编码混淆不需要替换objc文件的头部；
+        //方法混淆需要；
+       
+    }
+    public class func replaceMFile(_ mFilePath:String?){
+        
         print(mFilePath ?? "")
-        guard let path = mFilePath?.replacingOccurrences(of: ".m", with: ".h") else {
+        guard let path = mFilePath else {
             return
         }
+        let headerString = (path as NSString).lastPathComponent.replacingOccurrences(of: ".m", with: ".h")
+        let importHeaderString = "#import \"\(headerString)\""
         let url = URL(fileURLWithPath: path)
         do{
             let content = try String(contentsOf: url, encoding: String.Encoding.utf8)
-            if content.contains("#import \"DES3EncryptUtil.h\"") == false{
-                let replacedContent = content.replacingOccurrences(of: Template.des_origin_import, with: Template.des_encrypt_define)
+            if content.contains(Template.des_confuse_define) == false{
+                let replacedContent = content.replacingOccurrences(of: importHeaderString, with: "$0\n\(Template.des_confuse_define)", options: String.CompareOptions.regularExpression, range: nil)
                 try replacedContent.write(to: url, atomically: true, encoding: String.Encoding.utf8)
             }
-            
         }catch let error{
             print(error)
         }
     }
-    public class func replaceMFile(){
+    public class func matchStrings(_ mFilePath:String?,_ classConfig:ClassConfig){
+        guard let path = mFilePath else {
+            return
+        }
         
-    }
-    public class func matchStrings(){
-        
+        let url = URL(fileURLWithPath: path)
+        do{
+            let content = try String(contentsOf: url, encoding: String.Encoding.utf8)
+            var replacedContent = content
+            if let confuseStrings = classConfig.confuseStrings{
+                for confuseString in confuseStrings {
+                    let objcOldString = "@\"\(confuseString)\""
+                    if let encryptedString = DES3EncryptUtil.encrypt(confuseString){
+                        let objcNewString = "des_decrypt(@\"\(encryptedString)\")"
+                        replacedContent = replacedContent.replacingOccurrences(of: objcOldString, with: objcNewString, options: String.CompareOptions.regularExpression, range: nil)
+                    }
+                }
+                try replacedContent.write(to: url, atomically: true, encoding: String.Encoding.utf8)
+                
+            }
+            
+            
+        }catch let error{
+            print(error)
+        }
     }
    
     

@@ -13,10 +13,12 @@ public struct Template{
 #import <Foundation/Foundation.h>
 """
     public static let des_confuse_define = """
-#import <Foundation/Foundation.h>
 #import "DES3EncryptUtil.h"
-#define des_decrypt(a)  [DES3EncryptUtil decrypt:a];
-#define des_encrypt(b)  [DES3EncryptUtil encrypt:b];
+#define des_decrypt(a)  [DES3EncryptUtil decrypt:a]
+#define des_encrypt(b)  [DES3EncryptUtil encrypt:b]
+"""
+    public static let des_header_import = """
+#import "DES3EncryptUtil.h"
 """
     public static let des_decrypt_define = """
 #define des_decrypt(a)  [DES3EncryptUtil decrypt:a];
@@ -417,16 +419,19 @@ static const char encodingTable[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopq
     "array": [
         {
             "className": "EgretManager",
+            "type":0,
             "confuseStrings": ["stable_url","hall","stable","/game/config/version.json"],
             "confuseRegexs": ["https://","wss://","http://","ws://"]
         },
         {
             "className": "EgretViewController",
+            "type":0,
             "confuseStrings": ["get_app_info","initialized","openinstall_data","set_key","statistic_user_action","download","quit","reload","open_web","close_web","copy_to_clipboard","composite_bitmap","share","save_bitmap_to_gallery","qq_temporary_session","open_site","open_app","ios_app_exists","auth","get_error_version","set_start_path","network_status","offline","delete_auth"],
             "confuseRegexs": ["https://","wss://","http://","ws://"]
         },
         {
             "className": "Limbs",
+            "type":0,
             "confuseStrings": ["FULL_COMMON_SERVER","com.jiujiuceshi.test","uniqueId","platform","buildVersionCode"],
             "confuseRegexs": ["https://","wss://","http://","ws://"]
         }
