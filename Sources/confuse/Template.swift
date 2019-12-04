@@ -342,7 +342,7 @@ static const char encodingTable[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopq
         short bufferLength;
         for (bufferLength = 0; bufferLength < 4; i++)
         {
-            if (characters[i] == '\0')
+            if (characters[i] == '\\0')
                 break;
             if (isspace(characters[i]) || characters[i] == '=')
                 continue;
@@ -425,6 +425,19 @@ static const char encodingTable[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopq
             "className": "EgretManager",
             "type":0,
             "confuseStrings": ["/game/config/version.json"],
+            "confuseRegexs": ["https://","wss://","http://","ws://"],
+            "ignoreStrings":["https://www.stable.com","https://www.hall.com"]
+        },
+        {
+            "className": "NSURLSession+EgretDataTask",
+            "type":0,
+            "confuseStrings": ["/game/config/version.json"],
+            "confuseRegexs": ["https://","wss://","http://","ws://"]
+        },
+        {
+            "className": "ServersManager",
+            "type":0,
+            "confuseStrings": ["report_push_token","umeng","jpush","type","token"],
             "confuseRegexs": ["https://","wss://","http://","ws://"]
         },
         {
@@ -556,7 +569,7 @@ static const char encodingTable[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopq
                 if int(numberStr) != 0:
                     decodeConfusion_string = decodeConfusion_string + "%c" % (int(numberStr) ^ 0xAA)
 
-            # replaced_string = '\"' + "".join(["%c" % ((int(c) ^ 0xAA) if int(c) != 0 else '\0') for c in string.split(',')]) + '\"'
+            # replaced_string = '\"' + "".join(["%c" % ((int(c) ^ 0xAA) if int(c) != 0 else '\\0') for c in string.split(',')]) + '\"'
             replaced_string = '\"' + decodeConfusion_string + '\"'
             print("replaced_string = " + replaced_string)
 

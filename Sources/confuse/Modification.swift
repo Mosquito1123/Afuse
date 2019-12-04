@@ -27,7 +27,7 @@ public class Modification{
         guard let path = mFilePath else {
             return
         }
-        let headerString = (path as NSString).lastPathComponent.replacingOccurrences(of: ".m", with: ".h")
+        let headerString = (path as NSString).lastPathComponent.replacingOccurrences(of: ".m", with: ".h").replacingOccurrences(of: "+", with: "\\+")
         let importHeaderString = "#import \"\(headerString)\""
         let url = URL(fileURLWithPath: path)
         do{
@@ -63,7 +63,10 @@ public class Modification{
             }
             if let _ = classConfig.confuseRegexs{
                 
-                let results = Modification.matches(for: "(https?|ftp|file|wss?)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]", in: replacedContent)
+                var results = Modification.matches(for: "(https?|ftp|file|wss?)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]", in: replacedContent)
+                results.removeAll { (result) -> Bool in
+                    return classConfig.ignoreStrings?.contains(result) == true
+                }
                 for result in results{
                     let objcOldString = "@\"\(result)\""
                     if let encryptedString = DES3EncryptUtil.encrypt(result){

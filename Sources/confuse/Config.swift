@@ -15,6 +15,7 @@ public struct ClassConfig:Codable{
     public var type:ClassType?
     public var confuseStrings:[String]?
     public var confuseRegexs:[String]?
+    public var ignoreStrings:[String]?
 }
 public enum ClassType:Int,Codable{
     case objc

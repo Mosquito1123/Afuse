@@ -9,7 +9,7 @@ import Foundation
 public class AutoConfuse{
     
     //自动混淆
-    public class func auto_confuse(inputDir input:String?,needHandlerAssets handleAssets:Bool=true,needDeleteComments:Bool=true,modifyProjectName modifyProjectNameParams:String?,modifyClassNamePrefix modifyClassNamePrefixParams:String?,ignoreDirNames dirNamesString:String?){
+    public class func auto_confuse(inputDir input:String?,mainGroup mainGroupName:String?="Tortoise",needHandlerAssets handleAssets:Bool=true,needDeleteComments:Bool=true,modifyProjectName modifyProjectNameParams:String? = nil,modifyClassNamePrefix modifyClassNamePrefixParams:String? = nil,ignoreDirNames dirNamesString:String? = nil){
         
         let ignoreDirNames = dirNamesString?.components(separatedBy: ",") ?? []
         print("IgnoreDir names are \(ignoreDirNames)")
@@ -38,7 +38,7 @@ public class AutoConfuse{
         
         Recursiver.swift_recursiveDirectory(directory: input ?? "", ignoreDirNames: ignoreDirNames, handleMFile: { (mFilePath) in
 
-            if mFilePath?.contains("Tortoise") == true{
+            if mFilePath?.contains(mainGroupName ?? "") == true{
                 config?.array?.forEach({ (conf) in
                     if let className = conf.className{
                         if mFilePath?.contains(className) == true{

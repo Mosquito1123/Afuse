@@ -31,6 +31,8 @@ let verbosity = CounterOption(shortFlag: "v", longFlag: "verbose",
 
 let filePathx = StringOption(shortFlag: "i", longFlag: "input", required: true,
   helpMessage: "Path to the input file.")
+let mainGroupx = StringOption(shortFlag: "M", longFlag: "mainGroup", required: true,
+helpMessage: "MainGroup To Confuse.")
 let spamCodeOutPathx = StringOption(shortFlag: "s", longFlag: "spamCodeOut",
   helpMessage: "Generate spam code output path.For example:path,paramName,oldFunc,newClass")
 let handleXcassetsx = StringOption(shortFlag: "x", longFlag: "handleXcassets",
@@ -45,7 +47,7 @@ let ignoreDirNamesx = StringOption(shortFlag: "g", longFlag: "ignoreDirNames",
 helpMessage: "Ignore dirNames.Format:A,B,C....For example:DDApp,CCApp,BBApp....")
 
 
-cli.addOptions(filePathx,spamCodeOutPathx,handleXcassetsx,deleteCommentsx,modifyProjectNamex,modifyClassNamePrefixx,ignoreDirNamesx)
+cli.addOptions(filePathx,mainGroupx,spamCodeOutPathx,handleXcassetsx,deleteCommentsx,modifyProjectNamex,modifyClassNamePrefixx,ignoreDirNamesx)
 do {
   try cli.parse()
 } catch let error{
@@ -54,7 +56,7 @@ do {
 let handleAssets = handleXcassetsx.value?.boolValue ?? false
 let deleteComments = deleteCommentsx.value?.boolValue ?? false
 
-AutoConfuse.auto_confuse(inputDir: filePathx.value, needHandlerAssets: handleAssets, needDeleteComments: deleteComments, modifyProjectName: modifyProjectNamex.value, modifyClassNamePrefix: modifyClassNamePrefixx.value, ignoreDirNames: ignoreDirNamesx.value)
+AutoConfuse.auto_confuse(inputDir: filePathx.value,mainGroup:mainGroupx.value, needHandlerAssets: handleAssets, needDeleteComments: deleteComments, modifyProjectName: modifyProjectNamex.value, modifyClassNamePrefix: modifyClassNamePrefixx.value, ignoreDirNames: ignoreDirNamesx.value)
 
 
 /*

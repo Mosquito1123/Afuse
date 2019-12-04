@@ -95,17 +95,7 @@ public class Preparation{
                 let refer_des_h = try main_group.addFile(at: Path(des_h), sourceRoot: Path(input))
                let refer_des_m =  try main_group.addFile(at: Path(des_m), sourceRoot: Path(input))
 
-
-//                xcodeproj.pbxproj.add(object: refer_base64_h)
-//                xcodeproj.pbxproj.add(object: refer_base64_m)
-//
-//                xcodeproj.pbxproj.add(object: refer_des_h)
-//
-//                xcodeproj.pbxproj.add(object: refer_des_m)
-
-                let groupx = try xcodeproj.pbxproj.rootGroup()
                 
-                print(groupx?.group(named: "Tortoise"))
                 try project.targets.forEach { (target) in
                     print(target.name)
                     if target.name == mainGroup{
