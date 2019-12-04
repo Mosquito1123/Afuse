@@ -21,10 +21,10 @@ public struct Template{
 #import "DES3EncryptUtil.h"
 """
     public static let des_decrypt_define = """
-#define des_decrypt(a)  [DES3EncryptUtil decrypt:a];
+#define des_decrypt(a)  [DES3EncryptUtil decrypt:a]
 """
     public static let des_encrypt_define = """
-#define des_encrypt(b)  [DES3EncryptUtil encrypt:b];
+#define des_encrypt(b)  [DES3EncryptUtil encrypt:b]
 """
 
     public static func des_h()->String{
