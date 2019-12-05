@@ -36,9 +36,9 @@ pod install
         #import <Foundation/Foundation.h>
         @interface DES3EncryptUtil : NSObject
         // 加密方法
-        + (NSString*)encrypt:(NSString*)plainText;
+        + (NSString *)encrypt:(NSString *)plainText;
         // 解密方法
-        + (NSString*)decrypt:(NSString*)encryptText;
+        + (NSString *)decrypt:(NSString *)encryptText;
         @end
         """
     }
@@ -50,14 +50,14 @@ pod install
         #import "MyBase64.h"
 
         //秘钥
-        #define gkey            @"\(salt)"
+        #define gkey @"\(salt)"
         //向量
-        #define gIv             @"\(iv)"
+        #define gIv  @"\(iv)"
 
         @implementation DES3EncryptUtil : NSObject
 
         // 加密方法
-        + (NSString*)encrypt:(NSString*)plainText {
+        + (NSString *)encrypt:(NSString *)plainText {
             NSData* data = [plainText dataUsingEncoding:NSUTF8StringEncoding];
             size_t plainTextBufferSize = [data length];
             const void *vplainText = (const void *)[data bytes];
@@ -92,7 +92,7 @@ pod install
         }
 
         // 解密方法
-        + (NSString*)decrypt:(NSString*)encryptText {
+        + (NSString *)decrypt:(NSString *)encryptText {
             NSData *encryptData = [MyBase64 dataWithBase64EncodedString:encryptText];
             size_t plainTextBufferSize = [encryptData length];
             const void *vplainText = [encryptData bytes];
@@ -121,8 +121,7 @@ pod install
                                bufferPtrSize,
                                &movedBytes);
             
-            NSString *result = [[NSString alloc] initWithData:[NSData dataWithBytes:(const void *)bufferPtr
-                                                                             length:(NSUInteger)movedBytes] encoding:NSUTF8StringEncoding] ;
+            NSString *result = [[NSString alloc] initWithData:[NSData dataWithBytes:(const void *)bufferPtr length:(NSUInteger)movedBytes] encoding:NSUTF8StringEncoding] ;
             return result;
         }
 

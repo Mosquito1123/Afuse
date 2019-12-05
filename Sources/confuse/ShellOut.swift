@@ -11,13 +11,29 @@ import Dispatch
 @discardableResult
 public func shell(_ launchPath: String, _ arguments: [String] = []) -> (String?, Int32) {
   let task = Process()
-    if #available(OSX 10.13, *) {
-        task.executableURL = URL(fileURLWithPath: launchPath)
+//    if #available(OSX 10.13, *) {
+//        task.executableURL = URL(fileURLWithPath: launchPath)
+//    } else {
+//        // Fallback on earlier versions
+//    }
+    task.launchPath = launchPath
+  task.arguments = arguments
+//    task.currentDirectoryPath = "/Users/elen/Desktop/chess-shell-ios"
+    var home:String
+    if #available(OSX 10.12, *) {
+        home = FileManager.default.homeDirectoryForCurrentUser.path
     } else {
         // Fallback on earlier versions
-    }
-  task.arguments = arguments
+        home = URL(fileURLWithPath: NSHomeDirectory()).path
 
+    }
+    print(home)
+    task.environment = ["LANG": "en_US.UTF-8",
+                        "PATH": "$PATH:$HOME/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/sbin:/usr/local/bin",
+                        "LC_ALL": "en_US.UTF-8",
+                        "HOME": home
+    ]
+    
   let pipe = Pipe()
   task.standardOutput = pipe
   task.standardError = pipe

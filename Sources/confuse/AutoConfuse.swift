@@ -76,7 +76,11 @@ public class AutoConfuse{
         Modification.executeModifyProjectName(input,modifyProjectNameParams)
         Modification.executeModifyClassNamePrefix(input,ignoreDirNames,modifyClassNamePrefixParams)
 
-        
+        if let result = shell("/usr/local/bin/pod", ["install", "--project-directory=\(input ?? "")"]).0{
+            print(result)
+
+        }
+     
     }
 }
 //cd input && pod install

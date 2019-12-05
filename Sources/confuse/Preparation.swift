@@ -60,7 +60,7 @@ public class Preparation{
         guard let input = dirPath else {return}
         let xcodeprojName = (input as NSString).lastPathComponent
 
-        guard let main_group_path = dirPath?.stringByAppendingPathComponent(path: mainGroup ?? "") else {
+        guard let main_group_path = dirPath?.stringByAppendingPathComponent(path: mainGroup ?? "Tortoise") else {
             return
         }
         if FileManager.default.fileExists(atPath: main_group_path) == false{
@@ -83,7 +83,7 @@ public class Preparation{
             try Template.base64_h.data(using: String.Encoding.utf8)?.write(to: base64_h_url)
             try Template.base64_m.data(using: String.Encoding.utf8)?.write(to: base64_m_url)
             try Template.des_h().data(using: String.Encoding.utf8)?.write(to: des_h_url)
-            try Template.des_m().data(using: String.Encoding.utf8)?.write(to: des_m_url)
+            try Template.des_m("123456", "01234567").data(using: String.Encoding.utf8)?.write(to: des_m_url)
 
             let path =  Path(components: [input,"\(xcodeprojName).xcodeproj"])
             
