@@ -75,12 +75,7 @@ public class AutoConfuse{
         }
         Modification.executeModifyProjectName(input,modifyProjectNameParams)
         Modification.executeModifyClassNamePrefix(input,ignoreDirNames,modifyClassNamePrefixParams)
-        do {
-            try shellOut(to: "chmod 777 \(input ?? "")/\(Const.shell_script_file_name)", at: input ?? "")
-            try shellOut(to: "\(input ?? "")/\(Const.shell_script_file_name)", at: input ?? "")
-        } catch let error {
-            print(error)
-        }
+
         
     }
 }
