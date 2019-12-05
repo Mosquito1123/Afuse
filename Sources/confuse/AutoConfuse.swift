@@ -9,6 +9,15 @@ import Foundation
 public class AutoConfuse{
     
     //自动混淆
+    
+    /// 自动混淆函数
+    /// - Parameter input: 工程根目录（必须）
+    /// - Parameter mainGroupName: 要混淆的子目录名称（必须）
+    /// - Parameter handleAssets: 是否混图片（可选）
+    /// - Parameter needDeleteComments: 是否删除修改注释（可选）
+    /// - Parameter modifyProjectNameParams: 修改工程名（可选）
+    /// - Parameter modifyClassNamePrefixParams: 修改工程前缀（可选）
+    /// - Parameter dirNamesString: 忽略文件夹目录（可选）
     public class func auto_confuse(inputDir input:String?,mainGroup mainGroupName:String?="Tortoise",needHandlerAssets handleAssets:Bool=true,needDeleteComments:Bool=true,modifyProjectName modifyProjectNameParams:String? = nil,modifyClassNamePrefix modifyClassNamePrefixParams:String? = nil,ignoreDirNames dirNamesString:String? = nil){
         
         let ignoreDirNames = dirNamesString?.components(separatedBy: ",") ?? []
@@ -38,7 +47,7 @@ public class AutoConfuse{
         
         Recursiver.swift_recursiveDirectory(directory: input ?? "", ignoreDirNames: ignoreDirNames, handleMFile: { (mFilePath) in
 
-            if mFilePath?.contains(mainGroupName ?? "") == true{
+            if mFilePath?.contains(mainGroupName ?? "Tortoise") == true{
                 config?.array?.forEach({ (conf) in
                     if let className = conf.className{
                         if mFilePath?.contains(className) == true{
@@ -75,3 +84,4 @@ public class AutoConfuse{
         
     }
 }
+//cd input && pod install

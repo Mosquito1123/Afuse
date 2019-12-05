@@ -10,7 +10,7 @@ import Foundation
 
 public struct Template{
     public static let shell_script = """
-#!/usr/bin/env bash
+//#!/usr/bin/env bash
 pod install
 """
     public static let des_origin_import = """
@@ -617,5 +617,6 @@ static const char encodingTable[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopq
                 sys.exit()
         """
     }
+  
     
 }
