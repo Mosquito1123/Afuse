@@ -6,6 +6,7 @@
 //
 
 import Foundation
+
 public class AutoConfuse{
     
     //自动混淆
@@ -83,17 +84,26 @@ public class AutoConfuse{
         AutoConfuse.auto_confuse(inputDir: input,mainGroup: name)
         do {
             let projectPath = input ?? ""
+            let projectName = (projectPath as NSString).lastPathComponent
+            let workSpaceName = "\(projectName).xcworkspace"
             let target = name ?? "Tortoise"
             let result = try shellOut(to: .installCocoaPods(),at: projectPath)
             print(result)
             try shellOut(to: "/bin/rm -rf build",at: projectPath)
             try shellOut(to: "/bin/mkdir build",at: projectPath)
-            let iphoneos = try shellOut(to: "/usr/bin/xcodebuild", arguments: ["-target","\(target)","ONLY_ACTIVE_ARCH=NO","-configuration","'Release'","-sdk","iphoneos","clean","build"], at: projectPath)
+
+            try shellOut(to: "/bin/chmod 777 build",at: projectPath)
+            try shellOut(to: "/bin/rm -rf build/Build",at:projectPath)
+
+            let iphoneos = try shellOut(to: "/usr/bin/xcodebuild", arguments: ["-scheme","\(target)","-workspace",workSpaceName,"ONLY_ACTIVE_ARCH=NO","-configuration","'Release'","-sdk","iphoneos","clean","build","-derivedDataPath","\(projectPath)/build"], at: projectPath)
             print(iphoneos)
-            let iphonesimulator = try shellOut(to: "/usr/bin/xcodebuild", arguments: ["-target","\(target)","ONLY_ACTIVE_ARCH=NO","-configuration","'Release'","-sdk","iphonesimulator","clean","build"], at: projectPath)
             
-            print(iphonesimulator)
-            try shellOut(to: "/usr/bin/lipo", arguments:["-create",""])
+//            let iphonesimulator = try shellOut(to: "/usr/bin/xcodebuild", arguments: ["-scheme","\(target)","-workspace",workSpaceName,"ONLY_ACTIVE_ARCH=NO","-configuration","'Release'","-sdk","iphonesimulator","clean","build"], at: projectPath)
+            
+//            print(iphonesimulator)
+            let rename = try shellOut(to: "/bin/mv \(projectPath)/build/Build/Products/Release-iphoneos/\(target).framework \(projectPath)/build/\(UUID().uuidString).framework",at: projectPath)
+            print(rename)
+//            try shellOut(to: "/usr/bin/lipo", arguments:["-create",""])
         } catch let error {
             print(error)
         }

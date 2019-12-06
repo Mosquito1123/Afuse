@@ -421,6 +421,7 @@ private extension Process {
         var errorData = Data()
 
         let outputPipe = Pipe()
+        
         standardOutput = outputPipe
 
         let errorPipe = Pipe()
@@ -430,6 +431,7 @@ private extension Process {
         outputPipe.fileHandleForReading.readabilityHandler = { handler in
             outputQueue.async {
                 let data = handler.availableData
+                print(String(data: data, encoding: String.Encoding.utf8) ?? "")
                 outputData.append(data)
                 outputHandle?.write(data)
             }
