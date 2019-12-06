@@ -8,10 +8,10 @@
 #import <Foundation/Foundation.h>
 @interface DES : NSObject
 
-+(NSString *)encryptUseDES2:(NSString *)plainText key:(NSString *)key;
-+ (NSString *)decryptUseDES:(NSString *)cipherText key:(NSString *)key;
+-(NSString *)encryptUseDES2:(NSString *)plainText key:(NSString *)key;
+- (NSString *)decryptUseDES:(NSString *)cipherText key:(NSString *)key;
 
 
-+(NSString *)encryptUseDES2M:(NSMutableString *)plainText key:(NSString *)key;
-+(NSString *)decryptUseDESM:(NSMutableString *)cipherText key:(NSString *)key;
+-(NSString *)encryptUseDES2M:(NSMutableString *)plainText key:(NSString *)key;
+-(NSString *)decryptUseDESM:(NSMutableString *)cipherText key:(NSString *)key;
 @end

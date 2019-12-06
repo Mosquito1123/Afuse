@@ -9,15 +9,15 @@
 #import <CommonCrypto/CommonCryptor.h>
 
 @implementation DES : NSObject
-+ (NSString *)encryptUseDES2M:(NSMutableString *)plainText key:(NSString *)key{
-   return  [DES encryptUseDES2:plainText key:key];
+- (NSString *)encryptUseDES2M:(NSMutableString *)plainText key:(NSString *)key{
+   return  [[DES new] encryptUseDES2:plainText key:key];
 }
-+(NSString *)decryptUseDESM:(NSMutableString *)cipherText key:(NSString *)key{
-    return  [DES decryptUseDESM:cipherText key:key];
+-(NSString *)decryptUseDESM:(NSMutableString *)cipherText key:(NSString *)key{
+    return  [[DES new] decryptUseDESM:cipherText key:key];
 
 }
 //加密
-+(NSString *) encryptUseDES2:(NSString *)plainText key:(NSString *)key{
+-(NSString *) encryptUseDES2:(NSString *)plainText key:(NSString *)key{
     NSString *ciphertext = nil;
     const char *textBytes = [plainText UTF8String];
     NSUInteger dataLength = [plainText length];
@@ -44,7 +44,7 @@
     return ciphertext;
 }
 
-+ (NSString *)decryptUseDES:(NSString *)cipherText key:(NSString *)key
+- (NSString *)decryptUseDES:(NSString *)cipherText key:(NSString *)key
 {
     NSData* cipherData = [[NSData alloc] initWithBase64EncodedString:cipherText options:0];
     
