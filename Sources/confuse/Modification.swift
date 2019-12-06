@@ -53,8 +53,8 @@ public class Modification{
                 for confuseString in confuseStrings {
                     
                     let objcOldString = "@\"\(confuseString)\""
-                    if let encryptedString = DES3EncryptUtil.encrypt(confuseString, key: "123456", iv: "01234567"){
-                        let objcNewString = "des_decrypt(@\"\(encryptedString)\")"
+                    if let encryptedString = DES.encryptUse2(confuseString, key: "123456"){
+                        let objcNewString = "des_decrypt(@\"\(encryptedString)\",@\"123456\")"
                         replacedContent = replacedContent.replacingOccurrences(of: objcOldString, with: objcNewString, options: String.CompareOptions.regularExpression, range: nil)
                     }
                 }
@@ -69,8 +69,8 @@ public class Modification{
                 }
                 for result in results{
                     let objcOldString = "@\"\(result)\""
-                    if let encryptedString = DES3EncryptUtil.encrypt(result, key: "123456", iv: "01234567"){
-                        let objcNewString = "des_decrypt(@\"\(encryptedString)\")"
+                    if let encryptedString = DES.encryptUse2(result, key: "123456"){
+                        let objcNewString = "des_decrypt(@\"\(encryptedString)\",@\"123456\")"
                         replacedContent = replacedContent.replacingOccurrences(of: objcOldString, with: objcNewString, options: String.CompareOptions.regularExpression, range: nil)
                     }
                 }

@@ -71,27 +71,20 @@ public class Preparation{
             }
             
         }
-        let base64_h = main_group_path.stringByAppendingPathComponent(path: "MyBase64.h")
-        let base64_m = main_group_path.stringByAppendingPathComponent(path: "MyBase64.m")
-        let des_h = main_group_path.stringByAppendingPathComponent(path: "DES3EncryptUtil.h")
-        let des_m = main_group_path.stringByAppendingPathComponent(path: "DES3EncryptUtil.m")
-        let base64_h_url = URL(fileURLWithPath: base64_h)
-        let base64_m_url = URL(fileURLWithPath: base64_m)
+
+        let des_h = main_group_path.stringByAppendingPathComponent(path: "DES.h")
+        let des_m = main_group_path.stringByAppendingPathComponent(path: "DES.m")
         let des_h_url = URL(fileURLWithPath: des_h)
         let des_m_url = URL(fileURLWithPath: des_m)
         do {
-            try Template.base64_h.data(using: String.Encoding.utf8)?.write(to: base64_h_url)
-            try Template.base64_m.data(using: String.Encoding.utf8)?.write(to: base64_m_url)
-            try Template.des_h().data(using: String.Encoding.utf8)?.write(to: des_h_url)
-            try Template.des_m("123456", "01234567").data(using: String.Encoding.utf8)?.write(to: des_m_url)
+            try Template.new_des_h.data(using: String.Encoding.utf8)?.write(to: des_h_url)
+            try Template.new_des_m.data(using: String.Encoding.utf8)?.write(to: des_m_url)
 
             let path =  Path(components: [input,"\(xcodeprojName).xcodeproj"])
             
             let xcodeproj = try XcodeProj(path: path)
             if let project = xcodeproj.pbxproj.projects.first,let main_group = project.mainGroup{
             
-                let refer_base64_h = try main_group.addFile(at: Path(base64_h), sourceRoot: Path(input))
-                let refer_base64_m = try main_group.addFile(at: Path(base64_m), sourceRoot: Path(input))
                 let refer_des_h = try main_group.addFile(at: Path(des_h), sourceRoot: Path(input))
                let refer_des_m =  try main_group.addFile(at: Path(des_m), sourceRoot: Path(input))
 
@@ -101,8 +94,6 @@ public class Preparation{
                     if target.name == mainGroup{
                         print(target.buildPhases)
                     
-                        let _ = try target.sourcesBuildPhase()?.add(file: refer_base64_h)
-                        let _ = try target.sourcesBuildPhase()?.add(file: refer_base64_m)
                         let _ = try target.sourcesBuildPhase()?.add(file: refer_des_h)
                         let _ = try target.sourcesBuildPhase()?.add(file: refer_des_m)
 
