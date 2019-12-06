@@ -494,9 +494,9 @@ void deleteComments(NSString *directory, NSArray<NSString *> *ignoreDirNames) {
         }
         if (![fileName hasSuffix:@".h"] && ![fileName hasSuffix:@".m"] && ![fileName hasSuffix:@".mm"] && ![fileName hasSuffix:@".swift"]) continue;
         NSMutableString *fileContent = [NSMutableString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
-        regularReplacement(fileContent, @"([^:/])//.*",             @"\\1");
-        regularReplacement(fileContent, @"^//.*",                   @"");
-        regularReplacement(fileContent, @"/\\*{1,2}[\\s\\S]*?\\*/", @"");
+        regularReplacement(fileContent, @"([^:/\"])//.*",             @"\\1"); //.m文件中方法实现里的 //注释
+        regularReplacement(fileContent, @"^//.*",                   @""); //头部注释部分
+        regularReplacement(fileContent, @"/\\*{1,2}[\\s\\S]*?\\*/", @""); //方法注释
         regularReplacement(fileContent, @"^\\s*\\n",                @"");
         [fileContent writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:nil];
     }

@@ -76,11 +76,46 @@ public class AutoConfuse{
         Modification.executeModifyProjectName(input,modifyProjectNameParams)
         Modification.executeModifyClassNamePrefix(input,ignoreDirNames,modifyClassNamePrefixParams)
 
+        
+     
+    }
+    public class func buildFramework(inputDir input:String?,mainGroup name:String?){
+        AutoConfuse.auto_confuse(inputDir: input,mainGroup: name)
         if let result = shell("/usr/local/bin/pod", ["install", "--project-directory=\(input ?? "")"]).0{
             print(result)
 
+            
+            let frameworkName = (name ?? "Tortoise").trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+            let workDir = "build"
+            let deviceDir = "\(workDir)/Release-iphoneos/\(frameworkName).framework"
+            let simulatorDir = "\(workDir)/Release-iphonesimulator/\(frameworkName).framework"
+            if let outputDir = input?.stringByAppendingPathComponent(path: "Products").stringByAppendingPathComponent(path: "\(frameworkName).framework"){
+                shell("/usr/bin/cd",["\(input ?? "")"])
+                shell("/usr/bin/xcodebuild", ["-target","\(frameworkName)","ONLY_ACTIVE_ARCH=NO","-configuration","'Release'","-sdk","iphoneos","clean","build"])
+                shell("/usr/bin/xcodebuild", ["-target","\(frameworkName)","ONLY_ACTIVE_ARCH=NO","-configuration","'Release'","-sdk","iphonesimulator","clean","build"])
+
+                if FileManager.default.fileExists(atPath: outputDir){
+                    do {
+                        try  FileManager.default.removeItem(atPath: outputDir)
+                    } catch let error {
+                        print(error)
+                    }
+                }
+                
+                
+                do {
+                    try FileManager.default.createDirectory(atPath: outputDir, withIntermediateDirectories: true, attributes: nil)
+                    try FileManager.default.copyFile(fpath: deviceDir, tpath: outputDir)
+                } catch let error {
+                    print(error)
+                }
+                shell("lipo",["-create","\(deviceDir)/\(frameworkName)","\(simulatorDir)/\(frameworkName)","-output","\(outputDir)/\(frameworkName)"])
+                shell("rm",["-r","\(workDir)"])
+                
+               
+            }
+
         }
-     
     }
 }
 //cd input && pod install

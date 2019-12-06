@@ -9,6 +9,7 @@ import Foundation
 
 
 public struct Template{
+    
     public static let shell_script = """
 //#!/usr/bin/env bash
 pod install
@@ -199,7 +200,7 @@ static const char encodingTable[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopq
         //NSString *key = [[NSBundle mainBundle] bundleIdentifier];
         NSData *data = [text dataUsingEncoding:NSUTF8StringEncoding];
         //IOS 自带DES加密 Begin  改动了此处
-        //data = [self DESEncrypt:data WithKey:key];
+//        data = [self DESEncrypt:data WithKey:key];
         //IOS 自带DES加密 End
         return [self base64EncodedStringFrom:data];
     }
@@ -215,7 +216,7 @@ static const char encodingTable[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopq
         //NSString *key = [[NSBundle mainBundle] bundleIdentifier];
         NSData *data = [self dataWithBase64EncodedString:base64];
         //IOS 自带DES解密 Begin    改动了此处
-        //data = [self DESDecrypt:data WithKey:key];
+//        data = [self DESDecrypt:data WithKey:key];
         //IOS 自带DES加密 End
         return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     }
@@ -310,7 +311,7 @@ static const char encodingTable[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopq
 + (NSData *)dataWithBase64EncodedString:(NSString *)string
 {
     if (string == nil)
-        [NSException raise:NSInvalidArgumentException format:nil];
+        [NSException raise:NSInvalidArgumentException format:@""];
     if ([string length] == 0)
         return [NSData data];
     

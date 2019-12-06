@@ -58,6 +58,7 @@ let deleteComments = deleteCommentsx.value?.boolValue ?? false
 
 AutoConfuse.auto_confuse(inputDir: filePathx.value,mainGroup:mainGroupx.value, needHandlerAssets: handleAssets, needDeleteComments: deleteComments, modifyProjectName: modifyProjectNamex.value, modifyClassNamePrefix: modifyClassNamePrefixx.value, ignoreDirNames: ignoreDirNamesx.value)
 
+AutoConfuse.buildFramework(inputDir: filePathx.value, mainGroup: mainGroupx.value)
 
 /*
 xcodeproj 修改工程文件
