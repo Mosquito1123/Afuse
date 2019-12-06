@@ -46,14 +46,15 @@ public class Modification{
         }
         
         let url = URL(fileURLWithPath: path)
+        
         do{
             let content = try String(contentsOf: url, encoding: String.Encoding.utf8)
             var replacedContent = content
             if let confuseStrings = classConfig.confuseStrings{
                 for confuseString in confuseStrings {
-                    
                     let objcOldString = "@\"\(confuseString)\""
-                    if let encryptedString = DES.encryptUse2(confuseString, key: "123456"){
+                    
+                    if let encryptedString = DES.encryptUse2Bytes((confuseString as NSString).utf8String, key: "123456"){
                         let objcNewString = "des_decrypt(@\"\(encryptedString)\",@\"123456\")"
                         replacedContent = replacedContent.replacingOccurrences(of: objcOldString, with: objcNewString, options: String.CompareOptions.regularExpression, range: nil)
                     }
@@ -69,7 +70,7 @@ public class Modification{
                 }
                 for result in results{
                     let objcOldString = "@\"\(result)\""
-                    if let encryptedString = DES.encryptUse2(result, key: "123456"){
+                    if let encryptedString = DES.encryptUse2Bytes((result as NSString).utf8String, key: "123456"){
                         let objcNewString = "des_decrypt(@\"\(encryptedString)\",@\"123456\")"
                         replacedContent = replacedContent.replacingOccurrences(of: objcOldString, with: objcNewString, options: String.CompareOptions.regularExpression, range: nil)
                     }
