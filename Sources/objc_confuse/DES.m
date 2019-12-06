@@ -25,13 +25,12 @@
     size_t bufferPtrSize = (dataLength + kCCBlockSizeDES) & ~(kCCBlockSizeDES - 1);
     unsigned char* buffer = (unsigned char *)malloc(bufferPtrSize);;
     memset(buffer, 0, bufferPtrSize);
-    Byte iv[] = {1,2,3,4,5,6,7,8};
     size_t numBytesEncrypted = 0;
     
     CCCryptorStatus cryptStatus = CCCrypt(kCCEncrypt, kCCAlgorithmDES,
                                           kCCOptionPKCS7Padding,
                                           [key UTF8String], kCCKeySizeDES,
-                                          iv,
+                                          NULL,
                                           textBytes, dataLength,
                                           buffer, bufferPtrSize,
                                           &numBytesEncrypted);
@@ -54,13 +53,12 @@
     memset(buffer, 0, bufferPtrSize);
     
     size_t numBytesDecrypted = 0;
-    Byte iv[] = {1,2,3,4,5,6,7,8};
     CCCryptorStatus cryptStatus = CCCrypt(kCCDecrypt,
                                           kCCAlgorithmDES,
                                           kCCOptionPKCS7Padding,
                                           [key UTF8String],
                                           kCCKeySizeDES,
-                                          iv,
+                                          NULL,
                                           [cipherData bytes],
                                           [cipherData length],
                                           buffer,

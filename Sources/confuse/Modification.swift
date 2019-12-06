@@ -6,7 +6,6 @@
 //
 
 import Foundation
-
 import objc_confuse
 
 
@@ -54,8 +53,8 @@ public class Modification{
                 for confuseString in confuseStrings {
                     let objcOldString = "@\"\(confuseString)\""
                     
-                    if let encryptedString = DES().encryptUse2M(NSMutableString(string: confuseString), key: "123456"){
-                        let objcNewString = "des_decrypt(@\"\(encryptedString)\",@\"123456\")"
+                    if let encryptedString = EncryptionTools.aesEncryptString(confuseString, keyString: "123456", iv: nil){
+                        let objcNewString = "aes_decrypt(@\"\(encryptedString)\",@\"123456\")"
                         replacedContent = replacedContent.replacingOccurrences(of: objcOldString, with: objcNewString, options: String.CompareOptions.regularExpression, range: nil)
                     }
                 }
@@ -70,8 +69,8 @@ public class Modification{
                 }
                 for result in results{
                     let objcOldString = "@\"\(result)\""
-                    if let encryptedString = DES().encryptUse2M(NSMutableString(string: result), key: "123456"){
-                        let objcNewString = "des_decrypt(@\"\(encryptedString)\",@\"123456\")"
+                    if let encryptedString = EncryptionTools.aesEncryptString(result, keyString: "123456", iv: nil){
+                        let objcNewString = "aes_decrypt(@\"\(encryptedString)\",@\"123456\")"
                         replacedContent = replacedContent.replacingOccurrences(of: objcOldString, with: objcNewString, options: String.CompareOptions.regularExpression, range: nil)
                     }
                 }

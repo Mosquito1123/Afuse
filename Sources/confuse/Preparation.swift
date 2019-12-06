@@ -72,13 +72,13 @@ public class Preparation{
             
         }
 
-        let des_h = main_group_path.stringByAppendingPathComponent(path: "DES.h")
-        let des_m = main_group_path.stringByAppendingPathComponent(path: "DES.m")
+        let des_h = main_group_path.stringByAppendingPathComponent(path: "EncryptionTools.h")
+        let des_m = main_group_path.stringByAppendingPathComponent(path: "EncryptionTools.m")
         let des_h_url = URL(fileURLWithPath: des_h)
         let des_m_url = URL(fileURLWithPath: des_m)
         do {
-            try Template.new_des_h.data(using: String.Encoding.utf8)?.write(to: des_h_url)
-            try Template.new_des_m.data(using: String.Encoding.utf8)?.write(to: des_m_url)
+            try Template.encryption_tools_h.data(using: String.Encoding.utf8)?.write(to: des_h_url)
+            try Template.encryption_tools_m.data(using: String.Encoding.utf8)?.write(to: des_m_url)
 
             let path =  Path(components: [input,"\(xcodeprojName).xcodeproj"])
             

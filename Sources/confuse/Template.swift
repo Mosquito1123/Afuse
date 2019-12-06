@@ -9,7 +9,277 @@ import Foundation
 
 
 public struct Template{
-    
+    public static let encryption_tools_h = """
+#import <Foundation/Foundation.h>
+#import <CommonCrypto/CommonCrypto.h>
+@interface EncryptionTools : NSObject
+
+/**
+ *  AES加密
+ *
+ *  @param string    要加密的字符串
+ *  @param keyString 加密密钥
+ *  @param iv        初始化向量(8个字节)
+ *
+ *  @return 返回加密后的base64编码字符串
+ */
++ (NSString *)aesEncryptString:(NSString *)string keyString:(NSString *)keyString iv:(NSData *)iv;
+
+/**
+ *  AES解密
+ *
+ *  @param string    加密并base64编码后的字符串
+ *  @param keyString 解密密钥
+ *  @param iv        初始化向量(8个字节)
+ *
+ *  @return 返回解密后的字符串
+ */
++ (NSString *)aesDecryptString:(NSString *)string keyString:(NSString *)keyString iv:(NSData *)iv;
+
+/**
+ *  DES加密
+ *
+ *  @param string    要加密的字符串
+ *  @param keyString 加密密钥
+ *  @param iv        初始化向量(8个字节)
+ *
+ *  @return 返回加密后的base64编码字符串
+ */
++ (NSString *)desEncryptString:(NSString *)string keyString:(NSString *)keyString iv:(NSData *)iv;
+
+/**
+ *  DES解密
+ *
+ *  @param string    加密并base64编码后的字符串
+ *  @param keyString 解密密钥
+ *  @param iv        初始化向量(8个字节)
+ *
+ *  @return 返回解密后的字符串
+ */
++ (NSString *)desDecryptString:(NSString *)string keyString:(NSString *)keyString iv:(NSData *)iv;
+
+@end
+
+"""
+    public static let encryption_tools_m = """
+//
+//  File.swift
+//
+//
+//  Created by Mosquito1123 on 06/12/2019.
+//
+
+
+#import "EncryptionTools.h"
+
+@implementation EncryptionTools
+
+//AES加密
++ (NSString *)aesEncryptString:(NSString *)string keyString:(NSString *)keyString iv:(NSData *)iv {
+   // 设置秘钥
+   NSData *keyData = [keyString dataUsingEncoding:NSUTF8StringEncoding];
+   uint8_t cKey[kCCKeySizeAES128];
+   bzero(cKey, sizeof(cKey));
+   [keyData getBytes:cKey length:kCCKeySizeAES128];
+   
+   // 设置iv
+   uint8_t cIv[kCCBlockSizeAES128];
+   bzero(cIv, kCCBlockSizeAES128);
+   int option = 0;
+   if (iv) {
+       [iv getBytes:cIv length:kCCBlockSizeAES128];
+       option = kCCOptionPKCS7Padding;
+   } else {
+       option = kCCOptionPKCS7Padding | kCCOptionECBMode;
+   }
+   
+   // 设置输出缓冲区
+   NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
+   size_t bufferSize = [data length] + kCCBlockSizeAES128;
+   void *buffer = malloc(bufferSize);
+   
+   // 开始加密
+   size_t encryptedSize = 0;
+   
+   /**
+    @constant   kCCAlgorithmAES     高级加密标准，128位(默认)
+    @constant   kCCAlgorithmDES     数据加密标准
+    */
+   CCCryptorStatus cryptStatus = CCCrypt(kCCEncrypt,
+                                         kCCAlgorithmAES,
+                                         option,
+                                         cKey,
+                                         kCCKeySizeAES128,
+                                         cIv,
+                                         [data bytes],
+                                         [data length],
+                                         buffer,
+                                         bufferSize,
+                                         &encryptedSize);
+   
+   NSData *result = nil;
+   if (cryptStatus == kCCSuccess) {
+       result = [NSData dataWithBytesNoCopy:buffer length:encryptedSize];
+   } else {
+       free(buffer);
+       NSLog(@"[错误] 加密失败|状态编码: %d", cryptStatus);
+   }
+   
+   return [result base64EncodedStringWithOptions:0];
+}
+
+//AES解密
++ (NSString *)aesDecryptString:(NSString *)string keyString:(NSString *)keyString iv:(NSData *)iv {
+   // 设置秘钥
+   NSData *keyData = [keyString dataUsingEncoding:NSUTF8StringEncoding];
+   uint8_t cKey[kCCKeySizeAES128];
+   bzero(cKey, sizeof(cKey));
+   [keyData getBytes:cKey length:kCCKeySizeAES128];
+   
+   // 设置iv
+   uint8_t cIv[kCCBlockSizeAES128];
+   bzero(cIv, kCCBlockSizeAES128);
+   int option = 0;
+   if (iv) {
+       [iv getBytes:cIv length:kCCBlockSizeAES128];
+       option = kCCOptionPKCS7Padding;
+   } else {
+       option = kCCOptionPKCS7Padding | kCCOptionECBMode;
+   }
+   
+   // 设置输出缓冲区，options参数很多地方是直接写0，但是在实际过程中可能出现回车的字符串导致解不出来
+   NSData *data = [[NSData alloc] initWithBase64EncodedString:string options:NSDataBase64DecodingIgnoreUnknownCharacters];
+   
+   size_t bufferSize = [data length] + kCCBlockSizeAES128;
+   void *buffer = malloc(bufferSize);
+   
+   // 开始解密
+   size_t decryptedSize = 0;
+   CCCryptorStatus cryptStatus = CCCrypt(kCCDecrypt,
+                                         kCCAlgorithmAES128,
+                                         option,
+                                         cKey,
+                                         kCCKeySizeAES128,
+                                         cIv,
+                                         [data bytes],
+                                         [data length],
+                                         buffer,
+                                         bufferSize,
+                                         &decryptedSize);
+   
+   NSData *result = nil;
+   if (cryptStatus == kCCSuccess) {
+       result = [NSData dataWithBytesNoCopy:buffer length:decryptedSize];
+   } else {
+       free(buffer);
+       NSLog(@"[错误] 解密失败|状态编码: %d", cryptStatus);
+   }
+   
+   return [[NSString alloc] initWithData:result encoding:NSUTF8StringEncoding];
+}
+
+//DES加密
++ (NSString *)desEncryptString:(NSString *)string keyString:(NSString *)keyString iv:(NSData *)iv {
+   // 设置秘钥
+   NSData *keyData = [keyString dataUsingEncoding:NSUTF8StringEncoding];
+   uint8_t cKey[kCCKeySizeDES];
+   bzero(cKey, sizeof(cKey));
+   [keyData getBytes:cKey length:kCCKeySizeDES];
+   
+   // 设置iv
+   uint8_t cIv[kCCBlockSizeDES];
+   bzero(cIv, kCCBlockSizeDES);
+   int option = 0;
+   if (iv) {
+       [iv getBytes:cIv length:kCCBlockSizeDES];
+       option = kCCOptionPKCS7Padding;
+   } else {
+       option = kCCOptionPKCS7Padding | kCCOptionECBMode;
+   }
+   
+   // 设置输出缓冲区
+   NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
+   size_t bufferSize = [data length] + kCCBlockSizeDES;
+   void *buffer = malloc(bufferSize);
+   
+   // 开始加密
+   size_t encryptedSize = 0;
+   
+   CCCryptorStatus cryptStatus = CCCrypt(kCCEncrypt,
+                                         kCCAlgorithmDES,
+                                         option,
+                                         cKey,
+                                         kCCKeySizeDES,
+                                         cIv,
+                                         [data bytes],
+                                         [data length],
+                                         buffer,
+                                         bufferSize,
+                                         &encryptedSize);
+   
+   NSData *result = nil;
+   if (cryptStatus == kCCSuccess) {
+       result = [NSData dataWithBytesNoCopy:buffer length:encryptedSize];
+   } else {
+       free(buffer);
+       NSLog(@"[错误] 加密失败|状态编码: %d", cryptStatus);
+   }
+   
+   return [result base64EncodedStringWithOptions:0];
+}
+
+//DES解密
++ (NSString *)desDecryptString:(NSString *)string keyString:(NSString *)keyString iv:(NSData *)iv {
+   // 设置秘钥
+   NSData *keyData = [keyString dataUsingEncoding:NSUTF8StringEncoding];
+   uint8_t cKey[kCCKeySizeDES];
+   bzero(cKey, sizeof(cKey));
+   [keyData getBytes:cKey length:kCCKeySizeDES];
+   
+   // 设置iv
+   uint8_t cIv[kCCBlockSizeDES];
+   bzero(cIv, kCCBlockSizeDES);
+   int option = 0;
+   if (iv) {
+       [iv getBytes:cIv length:kCCBlockSizeDES];
+       option = kCCOptionPKCS7Padding;
+   } else {
+       option = kCCOptionPKCS7Padding | kCCOptionECBMode;
+   }
+   
+   // 设置输出缓冲区，options参数很多地方是直接写0，但是在实际过程中可能出现回车的字符串导致解不出来
+   NSData *data = [[NSData alloc] initWithBase64EncodedString:string options:NSDataBase64DecodingIgnoreUnknownCharacters];
+
+   size_t bufferSize = [data length] + kCCBlockSizeDES;
+   void *buffer = malloc(bufferSize);
+   
+   // 开始解密
+   size_t decryptedSize = 0;
+   CCCryptorStatus cryptStatus = CCCrypt(kCCDecrypt,
+                                         kCCAlgorithmDES,
+                                         option,
+                                         cKey,
+                                         kCCKeySizeDES,
+                                         cIv,
+                                         [data bytes],
+                                         [data length],
+                                         buffer,
+                                         bufferSize,
+                                         &decryptedSize);
+   
+   NSData *result = nil;
+   if (cryptStatus == kCCSuccess) {
+       result = [NSData dataWithBytesNoCopy:buffer length:decryptedSize];
+   } else {
+       free(buffer);
+       NSLog(@"[错误] 解密失败|状态编码: %d", cryptStatus);
+   }
+   
+   return [[NSString alloc] initWithData:result encoding:NSUTF8StringEncoding];
+}
+
+@end
+"""
     public static let shell_script = """
 //#!/usr/bin/env bash
 pod install
@@ -18,18 +288,18 @@ pod install
 #import <Foundation/Foundation.h>
 """
     public static let des_confuse_define = """
-#import "DES.h"
-#define des_decrypt(text,gkey)  [DES decryptUseDES:text key:gkey]
-#define des_encrypt(text,gkey)  [DES encryptUseDES2:text key:gkey]
+#import "EncryptionTools.h"
+#define aes_decrypt(text,gkey)  [EncryptionTools aesDecryptString:text keyString:gkey iv:nil]
+#define aes_encrypt(text,gkey)  [EncryptionTools aesEncryptString:text keyString:gkey iv:nil]
 """
     public static let des_header_import = """
-#import "DES.h"
+#import "EncryptionTools.h"
 """
     public static let des_decrypt_define = """
-#define des_decrypt(text,gkey)  [DES decryptUseDES:text key:gkey]
+#define aes_decrypt(text,gkey) [EncryptionTools aesDecryptString:text keyString:gkey iv:nil]
 """
     public static let des_encrypt_define = """
-#define des_encrypt(text,key)  [DES encryptUseDES2:text key:gkey]
+#define aes_encrypt(text,key)  [EncryptionTools aesEncryptString:text keyString:gkey iv:nil]
 """
 
     
@@ -54,13 +324,12 @@ pod install
     size_t bufferPtrSize = (dataLength + kCCBlockSizeDES) & ~(kCCBlockSizeDES - 1);
     unsigned char* buffer = (unsigned char *)malloc(bufferPtrSize);;
     memset(buffer, 0, bufferPtrSize);
-    Byte iv[] = {1,2,3,4,5,6,7,8};
     size_t numBytesEncrypted = 0;
     
     CCCryptorStatus cryptStatus = CCCrypt(kCCEncrypt, kCCAlgorithmDES,
                                           kCCOptionPKCS7Padding,
                                           [key UTF8String], kCCKeySizeDES,
-                                          iv,
+                                          NULL,
                                           textBytes, dataLength,
                                           buffer, bufferPtrSize,
                                           &numBytesEncrypted);
@@ -83,13 +352,12 @@ pod install
     memset(buffer, 0, bufferPtrSize);
     
     size_t numBytesDecrypted = 0;
-    Byte iv[] = {1,2,3,4,5,6,7,8};
     CCCryptorStatus cryptStatus = CCCrypt(kCCDecrypt,
                                           kCCAlgorithmDES,
                                           kCCOptionPKCS7Padding,
                                           [key UTF8String],
                                           kCCKeySizeDES,
-                                          iv,
+                                          NULL,
                                           [cipherData bytes],
                                           [cipherData length],
                                           buffer,

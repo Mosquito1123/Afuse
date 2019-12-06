@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CryptoTokenKit
 public class Random{
     public func randomString(_ length:Int)->String{
         let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
@@ -13,3 +14,4 @@ public class Random{
     }
     
 }
+
