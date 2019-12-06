@@ -397,7 +397,18 @@ private extension Process {
     @discardableResult func launchBash(with command: String, outputHandle: FileHandle? = nil, errorHandle: FileHandle? = nil) throws -> String {
         launchPath = "/bin/bash"
         arguments = ["-c",command]
+        var home:String
+        if #available(OSX 10.12, *) {
+            home = FileManager.default.homeDirectoryForCurrentUser.path
+        } else {
+            // Fallback on earlier versions
+            home = URL(fileURLWithPath: NSHomeDirectory()).path
 
+        }
+        environment = ["LANG": "en_US.UTF-8",
+                        "PATH": "$PATH:$HOME/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/sbin:/usr/local/bin",
+                        "LC_ALL": "en_US.UTF-8",
+                        "HOME": home]
         
 
         // Because FileHandle's readabilityHandler might be called from a

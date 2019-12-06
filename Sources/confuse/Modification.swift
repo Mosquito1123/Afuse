@@ -112,7 +112,7 @@ public class Modification{
     //修改类名前缀
     public class func executeModifyClassNamePrefix(_ directory:String?,_ ignoreDirNames:[String]!,_ paramsString:String?){
         guard let sourcePath = paramsString?.components(separatedBy: " ").first?.stringByAppendingPathComponent(path: "project.pbxproj") else {
-            print("文件不存在")
+//            print("文件不存在")
             return  }
         let old = paramsString?.components(separatedBy: " ").last?.components(separatedBy: ">").first
         let new = paramsString?.components(separatedBy: " ").last?.components(separatedBy: ">").last
