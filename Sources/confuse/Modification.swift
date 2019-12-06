@@ -54,7 +54,7 @@ public class Modification{
                 for confuseString in confuseStrings {
                     let objcOldString = "@\"\(confuseString)\""
                     
-                    if let encryptedString = DES.encryptUse2Bytes((confuseString as NSString).utf8String, key: "123456"){
+                    if let encryptedString = DES.encryptUse2M(NSMutableString(string: confuseString), key: "123456"){
                         let objcNewString = "des_decrypt(@\"\(encryptedString)\",@\"123456\")"
                         replacedContent = replacedContent.replacingOccurrences(of: objcOldString, with: objcNewString, options: String.CompareOptions.regularExpression, range: nil)
                     }
@@ -70,7 +70,7 @@ public class Modification{
                 }
                 for result in results{
                     let objcOldString = "@\"\(result)\""
-                    if let encryptedString = DES.encryptUse2Bytes((result as NSString).utf8String, key: "123456"){
+                    if let encryptedString = DES.encryptUse2M(NSMutableString(string: result), key: "123456"){
                         let objcNewString = "des_decrypt(@\"\(encryptedString)\",@\"123456\")"
                         replacedContent = replacedContent.replacingOccurrences(of: objcOldString, with: objcNewString, options: String.CompareOptions.regularExpression, range: nil)
                     }
