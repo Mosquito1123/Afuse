@@ -55,6 +55,21 @@ do {
 }
 let handleAssets = handleXcassetsx.value?.boolValue ?? false
 let deleteComments = deleteCommentsx.value?.boolValue ?? false
+do{
+    try AutoConfuse.fetchProjectFromGit("git@gitlab.baifu-tech.net:engineering-lion/chess/chess-shell-ios.git", nil, successBlock: { (status, output, path) in
+        AutoConfuse.autoConfuse(inputDir: path,mainGroup: "Tortoise")
+        AutoConfuse.buildFramework(inputDir: path, mainGroup: "Tortoise", output: { (path) in
+            print(path)
+        }) { (error) in
+            print(error)
+        }
+    }, failureBlock: { (status, output, path) in
+        
+    })
+    
+}catch let error{
+    print(error)
+}
 do {
     try AutoConfuse.fetchProjectFromGit("git@gitlab.baifu-tech.net:engineering-lion/chess/chess-shell-ios.git", nil, successBlock: { (status, output, path) in
         AutoConfuse.autoConfuse(inputDir: path,mainGroup:mainGroupx.value, needHandlerAssets: handleAssets, needDeleteComments: deleteComments, modifyProjectName: modifyProjectNamex.value, modifyClassNamePrefix: modifyClassNamePrefixx.value, ignoreDirNames: ignoreDirNamesx.value)

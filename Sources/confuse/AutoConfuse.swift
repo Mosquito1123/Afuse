@@ -8,6 +8,37 @@
 import Foundation
 
 public class AutoConfuse{
+    
+    public enum ExportFrameworkError: Error {
+        case terminalError(Int, String)
+    }
+
+    public class func exportTortoiseFramework(compleiton: @escaping (Result<String, Error>) -> Void) {
+        do {
+            try AutoConfuse.fetchProjectFromGit("git@gitlab.baifu-tech.net:engineering-lion/chess/chess-shell-ios.git", nil, successBlock: { (status, output, path) in
+                AutoConfuse.autoConfuse(inputDir: path,mainGroup: "Tortoise")
+                AutoConfuse.buildFramework(inputDir: path, mainGroup: "Tortoise", output: { (path) in
+                    compleiton(.success(path))
+                }) { (error) in
+                    compleiton(.failure(error))
+                }
+            }, failureBlock: { (status, output, path) in
+                compleiton(.failure(ExportFrameworkError.terminalError(status, output)))
+
+            })
+        } catch let error {
+            compleiton(.failure(error))
+        }
+            
+            
+        
+        
+    }
+    /// 获取最新代码
+    /// - Parameter gitRepositoryPath: git
+    /// - Parameter localPath: 本地路径
+    /// - Parameter success: 成功回调
+    /// - Parameter failure: 失败回调
     public class func fetchProjectFromGit(_ gitRepositoryPath:String,_ localPath:String?,successBlock success:(Int,String,String?)->Void,failureBlock failure:(Int,String,String?)->Void) throws {
 
         var path:String
@@ -131,6 +162,12 @@ public class AutoConfuse{
         
      
     }
+    
+    /// buildFramework
+    /// - Parameter input: 输入路径
+    /// - Parameter name: 需要混淆文件夹名称
+    /// - Parameter success: 成功回调
+    /// - Parameter failure: 失败回调
     public class func buildFramework(inputDir input:String?,mainGroup name:String?,output success:(_ frameworkpath:String)->Void,error failure:(_ error:Error)->Void){
         AutoConfuse.autoConfuse(inputDir: input,mainGroup: name)
         do {
@@ -152,7 +189,7 @@ public class AutoConfuse{
             print(tuple.1)
             if status == 0 {
                 do{
-                    let rename = try shellOut(to: "/bin/mv \(projectPath)/build/Build/Products/Release-iphoneos/\(target).framework \(projectPath)/build/\(UUID().uuidString).framework",at: projectPath)
+                    let rename = try shellOut(to: "/bin/mv \(projectPath)/build/Build/Products/Release-iphoneos/\(target).framework \(projectPath)/build/\(target).framework",at: projectPath)
                                print(rename)
                     print(status)
                     success("\(projectPath)/build/\(UUID().uuidString).framework")
