@@ -186,13 +186,11 @@ public class AutoConfuse{
             try shellOut(to: "cd \(projectPath)")
             let tuple = CommandRunner.sync(shellPath: "/usr/bin/xcodebuild", arguments: ["-scheme","\(target)","-workspace","\(projectPath)/\(workSpaceName)","ONLY_ACTIVE_ARCH=NO","-configuration","'Release'","-sdk","iphoneos","clean","build","-derivedDataPath","\(projectPath)/build"])
             let status = tuple.0
-            print(tuple.1)
             if status == 0 {
                 do{
-                    let rename = try shellOut(to: "/bin/mv \(projectPath)/build/Build/Products/Release-iphoneos/\(target).framework \(projectPath)/build/\(target).framework",at: projectPath)
-                               print(rename)
-                    print(status)
-                    success("\(projectPath)/build/\(UUID().uuidString).framework")
+                    let outputPath = "\(projectPath)/build/\(target).framework"
+                    try shellOut(to: "/bin/mv \(projectPath)/build/Build/Products/Release-iphoneos/\(target).framework \(outputPath)",at: projectPath)
+                    success(outputPath)
 
                 }catch let error{
                     print(error)
