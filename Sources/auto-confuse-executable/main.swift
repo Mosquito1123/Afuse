@@ -55,40 +55,32 @@ do {
 }
 let handleAssets = handleXcassetsx.value?.boolValue ?? false
 let deleteComments = deleteCommentsx.value?.boolValue ?? false
+do {
+    try AutoConfuse.fetchProjectFromGit("git@gitlab.baifu-tech.net:engineering-lion/chess/chess-shell-ios.git", nil, successBlock: { (status, output, path) in
+        AutoConfuse.autoConfuse(inputDir: path,mainGroup:mainGroupx.value, needHandlerAssets: handleAssets, needDeleteComments: deleteComments, modifyProjectName: modifyProjectNamex.value, modifyClassNamePrefix: modifyClassNamePrefixx.value, ignoreDirNames: ignoreDirNamesx.value)
 
-AutoConfuse.auto_confuse(inputDir: filePathx.value,mainGroup:mainGroupx.value, needHandlerAssets: handleAssets, needDeleteComments: deleteComments, modifyProjectName: modifyProjectNamex.value, modifyClassNamePrefix: modifyClassNamePrefixx.value, ignoreDirNames: ignoreDirNamesx.value)
+        AutoConfuse.buildFramework(inputDir: path, mainGroup: mainGroupx.value, output: { (path) in
+            print(path)
+        }) { (error) in
+            print(error)
+        }
+    }, failureBlock: { (status, output, error) in
+        print(status,output)
 
-AutoConfuse.buildFramework(inputDir: filePathx.value, mainGroup: mainGroupx.value)
+    })
 
-/*
-xcodeproj 修改工程文件
-let projectPath = Path(components: [filePathx.value ?? "","NewIDemo.xcodeproj"])
-do{
-    let xcodeproj = try XcodeProj(path: projectPath)
-    let pbxproj = xcodeproj.pbxproj // Returns a PBXProj
-    pbxproj.nativeTargets.forEach { (target) in
-              print(target.name)
-
-    }
     
-    if let project = pbxproj.projects.first{
-        print(project)
-        
-        let mainGroup = project.mainGroup
-        print(mainGroup?.name)
-        
-        try mainGroup?.addGroup(named: "Tortoise")
-        
-    }
-    let key = "CURRENT_PROJECT_VERSION"
-    let newVersion = "1.2.3"//version
-    for conf in xcodeproj.pbxproj.buildConfigurations where conf.buildSettings[key] != nil {
-        conf.buildSettings[key] = newVersion
-    }
 
-    try xcodeproj.write(path: projectPath)
-}catch let error{
+} catch let error {
     print(error)
-    
 }
-*/
+AutoConfuse.autoConfuse(inputDir: filePathx.value,mainGroup:mainGroupx.value, needHandlerAssets: handleAssets, needDeleteComments: deleteComments, modifyProjectName: modifyProjectNamex.value, modifyClassNamePrefix: modifyClassNamePrefixx.value, ignoreDirNames: ignoreDirNamesx.value)
+
+AutoConfuse.buildFramework(inputDir: filePathx.value, mainGroup: mainGroupx.value, output: { (path) in
+    print(path)
+}) { (error) in
+    print(error)
+}
+
+
+

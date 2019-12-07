@@ -8,6 +8,57 @@
 import Foundation
 
 public class AutoConfuse{
+    public class func fetchProjectFromGit(_ gitRepositoryPath:String,_ localPath:String?,successBlock success:(Int,String,String?)->Void,failureBlock failure:(Int,String,String?)->Void) throws {
+
+        var path:String
+        if let localPath = localPath {
+            path = localPath
+            let uuid = UUID().uuidString
+            path = localPath.stringByAppendingPathComponent(path: uuid)
+
+            let lastComponent = gitRepositoryPath.components(separatedBy: "/").last
+            if let directoryname = lastComponent?.components(separatedBy: ".").first {
+                path =  path.stringByAppendingPathComponent(path: directoryname)
+                try FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: true, attributes: nil)
+            }
+           
+            
+        }else{
+            var home:String
+            if #available(OSX 10.12, *) {
+                home = FileManager.default.homeDirectoryForCurrentUser.path
+            } else {
+                // Fallback on earlier versions
+                home = URL(fileURLWithPath: NSHomeDirectory()).path
+
+            }
+            
+            let uuid = UUID().uuidString
+            path = home.stringByAppendingPathComponent(path: "Desktop").stringByAppendingPathComponent(path: uuid)
+
+            let lastComponent = gitRepositoryPath.components(separatedBy: "/").last
+            if let directoryname = lastComponent?.components(separatedBy: ".").first {
+                path =  path.stringByAppendingPathComponent(path: directoryname)
+                try FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: true, attributes: nil)
+            }
+           
+        }
+      
+
+        let result = CommandRunner.sync(shellPath: "/usr/bin/git", arguments: ["clone",gitRepositoryPath,path])
+        
+    
+        if result.0 == 0 {
+            
+
+            success(result.0,result.1,path)
+            
+        }else{
+
+            failure(result.0,result.1,nil)
+        }
+
+    }
     
     //自动混淆
     
@@ -19,7 +70,7 @@ public class AutoConfuse{
     /// - Parameter modifyProjectNameParams: 修改工程名（可选）
     /// - Parameter modifyClassNamePrefixParams: 修改工程前缀（可选）
     /// - Parameter dirNamesString: 忽略文件夹目录（可选）
-    public class func auto_confuse(inputDir input:String?,mainGroup mainGroupName:String?="Tortoise",needHandlerAssets handleAssets:Bool=true,needDeleteComments:Bool=true,modifyProjectName modifyProjectNameParams:String? = nil,modifyClassNamePrefix modifyClassNamePrefixParams:String? = nil,ignoreDirNames dirNamesString:String? = nil){
+    public class func autoConfuse(inputDir input:String?,mainGroup mainGroupName:String?="Tortoise",needHandlerAssets handleAssets:Bool=true,needDeleteComments:Bool=true,modifyProjectName modifyProjectNameParams:String? = nil,modifyClassNamePrefix modifyClassNamePrefixParams:String? = nil,ignoreDirNames dirNamesString:String? = nil){
         
         let ignoreDirNames = dirNamesString?.components(separatedBy: ",") ?? []
         print("IgnoreDir names are \(ignoreDirNames)")
@@ -80,8 +131,8 @@ public class AutoConfuse{
         
      
     }
-    public class func buildFramework(inputDir input:String?,mainGroup name:String?){
-        AutoConfuse.auto_confuse(inputDir: input,mainGroup: name)
+    public class func buildFramework(inputDir input:String?,mainGroup name:String?,output success:(_ frameworkpath:String)->Void,error failure:(_ error:Error)->Void){
+        AutoConfuse.autoConfuse(inputDir: input,mainGroup: name)
         do {
             let projectPath = input ?? ""
             let projectName = (projectPath as NSString).lastPathComponent
@@ -95,55 +146,34 @@ public class AutoConfuse{
             try shellOut(to: "/bin/chmod 777 build",at: projectPath)
             try shellOut(to: "/bin/rm -rf build/Build",at:projectPath)
 
-            let iphoneos = try shellOut(to: "/usr/bin/xcodebuild", arguments: ["-scheme","\(target)","-workspace",workSpaceName,"ONLY_ACTIVE_ARCH=NO","-configuration","'Release'","-sdk","iphoneos","clean","build","-derivedDataPath","\(projectPath)/build"], at: projectPath)
-            print(iphoneos)
+            try shellOut(to: "cd \(projectPath)")
+            let tuple = CommandRunner.sync(shellPath: "/usr/bin/xcodebuild", arguments: ["-scheme","\(target)","-workspace","\(projectPath)/\(workSpaceName)","ONLY_ACTIVE_ARCH=NO","-configuration","'Release'","-sdk","iphoneos","clean","build","-derivedDataPath","\(projectPath)/build"])
+            let status = tuple.0
+            print(tuple.1)
+            if status == 0 {
+                do{
+                    let rename = try shellOut(to: "/bin/mv \(projectPath)/build/Build/Products/Release-iphoneos/\(target).framework \(projectPath)/build/\(UUID().uuidString).framework",at: projectPath)
+                               print(rename)
+                    print(status)
+                    success("\(projectPath)/build/\(UUID().uuidString).framework")
+
+                }catch let error{
+                    print(error)
+                    failure(error)
+                    
+                }
+            }else{
+                print(tuple.1)
+            }
             
-//            let iphonesimulator = try shellOut(to: "/usr/bin/xcodebuild", arguments: ["-scheme","\(target)","-workspace",workSpaceName,"ONLY_ACTIVE_ARCH=NO","-configuration","'Release'","-sdk","iphonesimulator","clean","build"], at: projectPath)
             
-//            print(iphonesimulator)
-            let rename = try shellOut(to: "/bin/mv \(projectPath)/build/Build/Products/Release-iphoneos/\(target).framework \(projectPath)/build/\(UUID().uuidString).framework",at: projectPath)
-            print(rename)
-//            try shellOut(to: "/usr/bin/lipo", arguments:["-create",""])
+
         } catch let error {
             print(error)
-        }
-        /*
-        if let result = shell("/usr/local/bin/pod", ["install", "--project-directory=\(input ?? "")"]).0{
-            print(result)
-
-            
-            let frameworkName = (name ?? "Tortoise").trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-            let workDir = "build"
-            let deviceDir = "\(workDir)/Release-iphoneos/\(frameworkName).framework"
-            let simulatorDir = "\(workDir)/Release-iphonesimulator/\(frameworkName).framework"
-            if let outputDir = input?.stringByAppendingPathComponent(path: "Products").stringByAppendingPathComponent(path: "\(frameworkName).framework"){
-                shell("/usr/bin/cd",["\(input ?? "")"])
-                shell("/usr/bin/xcodebuild", ["-target","\(frameworkName)","ONLY_ACTIVE_ARCH=NO","-configuration","'Release'","-sdk","iphoneos","clean","build"])
-                shell("/usr/bin/xcodebuild", ["-target","\(frameworkName)","ONLY_ACTIVE_ARCH=NO","-configuration","'Release'","-sdk","iphonesimulator","clean","build"])
-
-                if FileManager.default.fileExists(atPath: outputDir){
-                    do {
-                        try  FileManager.default.removeItem(atPath: outputDir)
-                    } catch let error {
-                        print(error)
-                    }
-                }
-                
-                
-                do {
-                    try FileManager.default.createDirectory(atPath: outputDir, withIntermediateDirectories: true, attributes: nil)
-//                    try FileManager.default.copyFile(fpath: deviceDir, tpath: outputDir)
-                } catch let error {
-                    print(error)
-                }
-                shell("/usr/bin/lipo",["-create","\(deviceDir)/\(frameworkName)","\(simulatorDir)/\(frameworkName)","-output","\(outputDir)/\(frameworkName)"])
-//                shell("/bin/rm",["-rf","\(workDir)"])
-                
-               
-            }
+            failure(error)
 
         }
- */
+
     }
 }
 //cd input && pod install

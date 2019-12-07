@@ -58,6 +58,17 @@ public class Preparation{
     
     public func prepare_des_confuse_and_decode_confuse(_ dirPath:String?,_ mainGroup:String? = "Tortoise"){
         guard let input = dirPath else {return}
+        var xcodeProjComponent:String?
+        do{
+           let names = try FileManager.default.contentsOfDirectory(atPath: input)
+
+            xcodeProjComponent = names.first { (component) -> Bool in
+                return component.contains(".xcodeproj")
+            }
+            print(names)
+        }catch let error{
+            print(error)
+        }
         let xcodeprojName = (input as NSString).lastPathComponent
 
         guard let main_group_path = dirPath?.stringByAppendingPathComponent(path: mainGroup ?? "Tortoise") else {
@@ -80,7 +91,14 @@ public class Preparation{
             try Template.encryption_tools_h.data(using: String.Encoding.utf8)?.write(to: des_h_url)
             try Template.encryption_tools_m.data(using: String.Encoding.utf8)?.write(to: des_m_url)
 
-            let path =  Path(components: [input,"\(xcodeprojName).xcodeproj"])
+            var path:Path
+            if let component = xcodeProjComponent {
+               path =  Path(components: [input,component])
+
+            }else{
+                path =  Path(components: [input,"\(xcodeprojName).xcodeproj"])
+
+            }
             
             let xcodeproj = try XcodeProj(path: path)
             if let project = xcodeproj.pbxproj.projects.first,let main_group = project.mainGroup{
