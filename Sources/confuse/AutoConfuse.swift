@@ -41,52 +41,51 @@ public class AutoConfuse{
     /// - Parameter failure: 失败回调
     public class func fetchProjectFromGit(_ gitRepositoryPath:String,_ localPath:String?,successBlock success:(Int,String,String?)->Void,failureBlock failure:(Int,String,String?)->Void) throws {
 
+        let tmpPath = NSTemporaryDirectory()
+
+        var home:String
+        if #available(OSX 10.12, *) {
+            home = FileManager.default.homeDirectoryForCurrentUser.path
+        } else {
+            // Fallback on earlier versions
+            home = URL(fileURLWithPath: NSHomeDirectory()).path
+        }
         var path:String
         if let localPath = localPath {
             path = localPath
             let uuid = UUID().uuidString
             path = localPath.stringByAppendingPathComponent(path: uuid)
-
-            let lastComponent = gitRepositoryPath.components(separatedBy: "/").last
-            if let directoryname = lastComponent?.components(separatedBy: ".").first {
-                path =  path.stringByAppendingPathComponent(path: directoryname)
-                try FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: true, attributes: nil)
-            }
-           
-            
         }else{
-            var home:String
-            if #available(OSX 10.12, *) {
-                home = FileManager.default.homeDirectoryForCurrentUser.path
-            } else {
-                // Fallback on earlier versions
-                home = URL(fileURLWithPath: NSHomeDirectory()).path
-
-            }
-            
             let uuid = UUID().uuidString
             path = home.stringByAppendingPathComponent(path: "Desktop").stringByAppendingPathComponent(path: uuid)
-
-            let lastComponent = gitRepositoryPath.components(separatedBy: "/").last
-            if let directoryname = lastComponent?.components(separatedBy: ".").first {
-                path =  path.stringByAppendingPathComponent(path: directoryname)
-                try FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: true, attributes: nil)
-            }
-           
         }
-      
-
-        let result = CommandRunner.sync(shellPath: "/usr/bin/git", arguments: ["clone",gitRepositoryPath,path])
-        
-    
-        if result.0 == 0 {
+        let lastComponent = gitRepositoryPath.components(separatedBy: "/").last
+        if let directoryname = lastComponent?.components(separatedBy: ".").first {
+            let projectTmpPath = tmpPath.stringByAppendingPathComponent(path: directoryname)
+            let projectTmpGitPath = projectTmpPath.stringByAppendingPathComponent(path: ".git")
+//            path =  path.stringByAppendingPathComponent(path: directoryname)
+            try FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: true, attributes: nil)
             
-
-            success(result.0,result.1,path)
-            
-        }else{
-
-            failure(result.0,result.1,nil)
+            if FileManager.default.fileExists(atPath: projectTmpPath) && FileManager.default.fileExists(atPath: projectTmpGitPath) {
+                let cp = CommandRunner.sync(shellPath: "/bin/cp", arguments: ["-rf",projectTmpPath,path])
+                if cp.0 == 0 {
+                    path =  path.stringByAppendingPathComponent(path: directoryname)
+                    success(cp.0,cp.1,path)
+                }else{
+                    failure(cp.0,cp.1,nil)
+                }
+            }else{
+                try FileManager.default.createDirectory(atPath: projectTmpPath, withIntermediateDirectories: true, attributes: nil)
+                let _ = CommandRunner.sync(shellPath: "/usr/bin/git", arguments: ["clone",gitRepositoryPath,projectTmpPath])
+                let cp = CommandRunner.sync(shellPath: "/bin/cp", arguments: ["-rf",projectTmpPath,path])
+                
+                if cp.0 == 0 {
+                    path =  path.stringByAppendingPathComponent(path: directoryname)
+                    success(cp.0,cp.1,path)
+                }else{
+                    failure(cp.0,cp.1,nil)
+                }
+            }
         }
 
     }
